@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable, Iterable
 from pathlib import Path
-from typing import Callable, Iterable, List, Optional
 
 import tomli
 from pydantic import BaseModel, ConfigDict, ValidationError
@@ -28,8 +28,8 @@ class DagArguments(BaseModel):
 
     dag_id: str
     description: str
-    schedule: Optional[str] = None
-    tags: Optional[List[str]]
+    schedule: str | None = None
+    tags: list[str] | None
 
 
 class Config(BaseModel):
@@ -41,12 +41,11 @@ class Config(BaseModel):
     """
 
     version: int
-    description: Optional[str]
+    description: str | None
 
     @classmethod
     def from_toml(cls, file: Path) -> Config:
-        """
-        Function to unpack toml files to Config object.
+        """Load from TOML file to Config object.
 
         Args:
             file (Path): path to toml files.
@@ -59,9 +58,8 @@ class Config(BaseModel):
 
 def parse_config_file(
     resource_paths: Iterable[Path], parser: Callable[..., Config]
-) -> List[Config]:
-    """
-    Open all `TOML` files and returns valid `Config` objects.
+) -> list[Config]:
+    """Parse config files.
 
     Args:
         resource_paths (Iterable[Path]): file paths
