@@ -6,7 +6,7 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 
 import tomli
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -67,29 +67,5 @@ def parse_config_file(
     """
     configs: list[Config] = []
     for _path in resource_paths:
-        try:
-            configs.append(parser(_path))
-        except ValidationError as e:
-            # we only let the user know about the validation error and continue
-            _LOGGER.error("Invalid config file: %s", str(_path), exc_info=e)
-            continue
+        configs.append(parser(_path))
     return configs
-
-
-if __name__ == "__main__":
-    # TODO: turn these into tests
-
-    # test1
-    #    _path = (
-    #        Path(__file__).parent
-    #        / "configs"
-    #        / "finance_onprem-to-cloud_findw_full-load.toml"
-    #    )
-    #    Config.from_toml(_path, True)
-    # test2 - should return validation errors and 1 valid dag
-    #    _path = (Path(__file__).parent / "configs").glob("**/*.toml")
-    #    cfg = parse_config_file(_path, parser=Config.from_toml)
-    #    pprint(cfg)
-    # test3 - 1 valid dag
-    _path = (Path(__file__).parent / "configs").glob("**/*.toml")
-    cfg = parse_config_file(_path, parser=Config.from_toml)
