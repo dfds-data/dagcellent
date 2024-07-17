@@ -105,8 +105,33 @@ package = "dagcellent"
 package_dir = "src"
 # Where you want your news files to come out. This can be .rst
 # or .md, towncrier's default template works with both.
-filename = "NEWS.rst"
+filename = "doc/changelog.rst"
+directory = "doc/changes"
 
+[[tool.towncrier.type]]
+directory = "deprecation"
+name = "Deprecations"
+showcontent = true
+[[tool.towncrier.type]]
+directory = "feature"
+name = "Features"
+showcontent = true
+[[tool.towncrier.type]]
+directory = "bugfix"
+name = "Bug Fixes"
+showcontent = true
+[[tool.towncrier.type]]
+directory = "removal"
+name = "Removals"
+showcontent = true
+[[tool.towncrier.type]]
+directory = "doc"
+name = "Documentation"
+showcontent = true
+[[tool.towncrier.type]]
+directory = "misc"
+name = "Miscellaneous"
+showcontent = true
 
 [tool.pyright]
 include = ["src"]
@@ -248,3 +273,5 @@ show_error_codes = true
 disable_error_code = [
     "annotation-unchecked",
 ]
+
+

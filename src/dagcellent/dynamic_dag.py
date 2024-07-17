@@ -1,14 +1,15 @@
 """Module to help creating Dynamic DAGs in Airflow."""
 from __future__ import annotations
 
-import logging
+import json
 from collections.abc import Callable, Iterable
 from pathlib import Path
+from typing import TypeVar
 
 import tomli
 from pydantic import BaseModel, ConfigDict
 
-_LOGGER = logging.getLogger(__name__)
+T = TypeVar("T", bound="BaseModel")
 
 
 class DagArguments(BaseModel):
@@ -49,23 +50,33 @@ class Config(BaseModel):
 
         Args:
             file (Path): path to toml files.
-            test (bool, optional): testing mode. Defaults to False.
         """
         with open(file, "rb") as f:
             k = tomli.load(f)
         return cls(**k)
 
+    @classmethod
+    def from_json(cls, file: Path) -> Config:
+        """Load from JSON file to Config object.
+
+        Args:
+            file (Path): path to toml files.
+        """
+        with open(file) as f:
+            k = json.load(f)
+        return cls(**k)
+
 
 def parse_config_file(
-    resource_paths: Iterable[Path], parser: Callable[..., Config]
-) -> list[Config]:
+    resource_paths: Iterable[Path], parser: Callable[..., T]
+) -> list[T]:
     """Parse config files.
 
     Args:
         resource_paths (Iterable[Path]): file paths
         parser (Callable): parsing logic
     """
-    configs: list[Config] = []
+    configs: list[T] = []
     for _path in resource_paths:
         configs.append(parser(_path))
     return configs
