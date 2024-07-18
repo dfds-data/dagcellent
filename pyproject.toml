@@ -35,20 +35,26 @@ Issues = "https://github.com/dfds-data/dagcellent/issues"
 Source = "https://github.com/dfds-data/dagcellent"
 
 
+[tool.hatch.build]
+artifacts = ["src/dagcellent/__about__.py"]
+exclude = [".github","tests"]
+
 [tool.hatch.envs.default]
 installer = "uv"
 
 [tool.hatch.envs.dev]
-pre-commit = "3.7.1"
-ruff = "0.4.4"
-mypy = "1.10.1"
-versioningit = "3.1.1"
-towncrier = "23.11"
-
+dependencies = [
+    "pre-commit == 3.7.*",
+    "ruff == 0.4.4",
+    "mypy == 1.10.*",
+    "versioningit == 3.1.*",
+    "towncrier == 23.11.*",
+]
 
 [tool.hatch.envs.dev.scripts]
 install = "pre-commit install --hook-type commit-msg"
 version = "versioningit"
+changelog = "towncrier"
 
 [tool.hatch.envs.types]
 extra-dependencies = [
@@ -72,11 +78,6 @@ test = "pytest --cov=dagcellent --cov-report=term-missing --cov-report=xml --cov
 [tool.hatch.version]
 default-version = "0.0.0+unknown"
 source = "versioningit"
-
-[tool.hatch.version.format]
-distance = "{next_version}.dev{distance}+{vcs}{rev}"
-dirty = "{version}+dirty"
-distance-dirty = "{next_version}.dev{distance}+{vcs}{rev}.dirty"
 
 [tool.coverage.run]
 source_pkgs = ["dagcellent", "tests"]
@@ -278,4 +279,17 @@ disable_error_code = [
     "annotation-unchecked",
 ]
 
+[tool.versioningit.vcs]
+# The method key:
+method = "git"  # <- The method name
+
+# Parameters to pass to the method:
+match = ["v*"]
+default-tag = "0.0.1"
+[tool.versioningit.write]
+version-file = "src/dagcellent/__about__.py"
+[tool.versioningit.format]
+distance = "{next_version}.dev{distance}+{vcs}{rev}"
+dirty = "{version}+dirty"
+distance-dirty = "{next_version}.dev{distance}+{vcs}{rev}.dirty"
 
