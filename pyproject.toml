@@ -43,7 +43,7 @@ exclude = [".github","tests"]
 installer = "uv"
 
 [tool.hatch.envs.dev]
-dependencies = [
+extra-dependencies = [
     "pre-commit == 3.7.*",
     "ruff == 0.4.4",
     "mypy == 1.10.*",
@@ -76,7 +76,6 @@ python = ["3.11", "3.12"]
 test = "pytest --cov=dagcellent --cov-report=term-missing --cov-report=xml --cov-report=html tests"
 
 [tool.hatch.version]
-default-version = "0.0.0+unknown"
 source = "versioningit"
 
 [tool.coverage.run]
@@ -279,6 +278,9 @@ disable_error_code = [
     "annotation-unchecked",
 ]
 
+[tool.versioningit]
+default-version = "0.0.0+unknown"
+
 [tool.versioningit.vcs]
 # The method key:
 method = "git"  # <- The method name
@@ -286,8 +288,12 @@ method = "git"  # <- The method name
 # Parameters to pass to the method:
 match = ["v*"]
 default-tag = "0.0.1"
-[tool.versioningit.write]
-version-file = "src/dagcellent/__about__.py"
+
+[tool.hatch.build.hooks.versioningit-onbuild]
+source-file = "src/dagcellent/__init__.py"
+build-file = "dagcellent/__init__.py"
+require-match = true
+
 [tool.versioningit.format]
 distance = "{next_version}.dev{distance}+{vcs}{rev}"
 dirty = "{version}+dirty"

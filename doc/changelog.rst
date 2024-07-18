@@ -2,5 +2,9 @@ Change Log
 **********
 
 .. towncrier release notes start
-Version 0.0.1 (July 13, 2024)
-++++++++++++++++++++++++++++++
+
+Dagcellent 0.0.1 (2024-07-18)
+=============================
+
+No significant changes.
+
