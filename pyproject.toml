@@ -7,7 +7,7 @@ name = "dagcellent"
 dynamic = ["version"]
 description = ''
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 license = "MIT"
 keywords = ["apache-airflow", "dag", "data"]
 authors = [
@@ -64,6 +64,7 @@ extra-dependencies = [
     "pytest >= 8.0.0",
     "pytest-cov",
     "pytest-mock >= 3.14.0",
+    "versioningit @ git+https://github.com/jwodder/versioningit@gh-89",
 ]
 
 [[tool.hatch.envs.test.matrix]]
@@ -285,11 +286,6 @@ method = "git"  # <- The method name
 # Parameters to pass to the method:
 match = ["v*"]
 default-tag = "0.0.1"
-
-[tool.hatch.build.hooks.versioningit-onbuild]
-source-file = "src/dagcellent/__init__.py"
-build-file = "dagcellent/__init__.py"
-require-match = true
 
 [tool.versioningit.format]
 distance = "{next_version}.dev{distance}+{vcs}{rev}"
