@@ -1,6 +1,7 @@
 # Local assets #
 ################
 # This file is dynamically generated and packaged
+doc/changes/*
 src/dagcellent/__about__.py
 assets/*.xml
 
