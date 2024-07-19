@@ -9,7 +9,7 @@ from typing import TypeVar
 import tomli
 from pydantic import BaseModel, ConfigDict
 
-T = TypeVar("T", bound="BaseModel")
+T = TypeVar("T", bound="Config")
 
 
 class DagArguments(BaseModel):
@@ -45,7 +45,7 @@ class Config(BaseModel):
     description: str | None
 
     @classmethod
-    def from_toml(cls, file: Path) -> Config:
+    def from_toml(cls: type[T], file: Path) -> T:
         """Load from TOML file to Config object.
 
         Args:
@@ -56,7 +56,7 @@ class Config(BaseModel):
         return cls(**k)
 
     @classmethod
-    def from_json(cls, file: Path) -> Config:
+    def from_json(cls: type[T], file: Path) -> T:
         """Load from JSON file to Config object.
 
         Args:
