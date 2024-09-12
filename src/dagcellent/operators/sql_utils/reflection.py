@@ -98,11 +98,11 @@ def reflect_meta_data(engine: Engine) -> MetaData:
 def _log_reflected_table(meta_data: MetaData, table_name: str) -> None:
     """Debug utility: Logs the reflected table."""
     for c in meta_data.tables[table_name].columns:  # type: ignore
-        logging.info(f"{c.name: <15} {c.type!s: <15}")
+        logging.info("%s", f"{c.name: <15} {c.type!s: <15}")
 
 
 def strip_table_constraints(table: Table) -> Table:
-    """Returns a dummy Table object with only columns, types, precision, and scale."""
+    """Return a dummy Table object with only columns, types, precision, and scale."""
     _dummy_meta_data = MetaData()
     _dummy_table = Table(
         table.name, _dummy_meta_data, *[Column(c.name, c.type) for c in table.columns]
@@ -138,7 +138,7 @@ def create_external_table_redshift_arrow(
     query = f"CREATE EXTERNAL TABLE {schema_name}.{table} (\n" + query + "\n) "
     query = _external_table_query_redshift(query, s3_location, partitioned=partitioned)
     partition_query = None
-    if partitioned:
+    if partitioned and schema_name is not None:
         partition_query = _add_external_partition_redshift(
             table, schema_name, s3_location
         )
