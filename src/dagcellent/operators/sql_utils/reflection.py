@@ -5,7 +5,11 @@ import warnings
 from typing import TYPE_CHECKING, TypeAlias
 
 import pyarrow as pa
-from sqlalchemy import MetaData, create_engine, create_mock_engine, select
+from sqlalchemy import (
+    MetaData,
+    create_mock_engine,  # type: ignore[reportAttributeAccessIssue]
+    select,
+)
 from sqlalchemy.dialects.mssql.base import UNIQUEIDENTIFIER
 from sqlalchemy.schema import Column, CreateTable, Table
 
@@ -53,9 +57,9 @@ def pyarrow2redshift(dtype: pa.DataType, string_type: str) -> str:
     if pa.types.is_binary(dtype):
         return "VARBYTE"
     if pa.types.is_decimal(dtype):
-        return f"DECIMAL({dtype.precision},{dtype.scale})"
+        return f"DECIMAL({dtype.precision},{dtype.scale})"  # type: ignore[reportAttributeAccessIssue]
     if pa.types.is_dictionary(dtype):
-        return pyarrow2redshift(dtype=dtype.value_type, string_type=string_type)
+        return pyarrow2redshift(dtype=dtype.value_type, string_type=string_type)  # type: ignore[reportUnknownMember]
     if pa.types.is_list(dtype) or pa.types.is_struct(dtype) or pa.types.is_map(dtype):
         return "SUPER"
     raise UnsupportedType(f"Unsupported Redshift type: {dtype}")
@@ -63,7 +67,7 @@ def pyarrow2redshift(dtype: pa.DataType, string_type: str) -> str:
 
 def drop_unsupported_dtypes(table: Table) -> Table:
     _dummy_meta_data = MetaData()
-    good_columns: list[Column] = []
+    good_columns: list[Column] = []  # type: ignore[reportMissingTypeArguments]
     for col in table.columns.values():
         match col.type:
             case UNIQUEIDENTIFIER():
@@ -74,8 +78,8 @@ def drop_unsupported_dtypes(table: Table) -> Table:
                 )
                 continue
             case _:
-                # None of the unsupported datatypes are met.
-                good_columns.append(Column(col.name, col.type))
+                # None of the unsupported data types are met.
+                good_columns.append(Column(col.name, col.type))  # type: ignore[reportUnknownMemberType]
 
     _dummy_table = Table(table.name, _dummy_meta_data, *good_columns)
     _dummy_table.schema = table.schema
@@ -83,9 +87,9 @@ def drop_unsupported_dtypes(table: Table) -> Table:
 
 
 def reflect_select_query(table: Table, engine: Engine) -> Query:
-    """Reflects the select query from the metadata."""
+    """Reflect the select query from the meta data."""
     table = drop_unsupported_dtypes(table)
-    return str(select([table]).compile(engine))
+    return str(select([table]).compile(engine))  # type: ignore[reportUnknownMemberType]
 
 
 def reflect_meta_data(engine: Engine) -> MetaData:
@@ -119,8 +123,8 @@ def create_external_table_redshift(
 ) -> Query:
     if schema_name:
         table.schema = schema_name
-    mock = create_mock_engine(dialect, executor=lambda *args: None)
-    query = f"{CreateTable(table).compile(dialect=mock.dialect)!s}"
+    mock = create_mock_engine(dialect, executor=lambda *args: None)  # type: ignore[reportUnknownVariableType]
+    query = f"{CreateTable(table).compile(dialect=mock.dialect)!s}"  # type: ignore[reportUnknownMember]
     query = _external_table_query_redshift(query, s3_location, partitioned=partitioned)
     return query
 
@@ -138,7 +142,7 @@ def create_external_table_redshift_arrow(
     query = f"CREATE EXTERNAL TABLE {schema_name}.{table} (\n" + query + "\n) "
     query = _external_table_query_redshift(query, s3_location, partitioned=partitioned)
     partition_query = None
-    if partitioned and schema_name is not None:
+    if partitioned and schema_name:
         partition_query = _add_external_partition_redshift(
             table, schema_name, s3_location
         )
@@ -178,26 +182,3 @@ def _external_table_query_redshift(
     q += "TABLE PROPERTIES ('classification'='parquet')"
     q += ";"
     return q
-
-
-if __name__ == "__main__":
-    import pandas as pd
-
-    engine = create_engine("mssql+pymssql://sa:Alma1234@localhost:1433/master")
-    table_name = "test"
-    reflect_meta_data = reflect_meta_data(engine)
-    target_table = reflect_meta_data.tables[table_name]  # type: ignore[attr-defined]
-
-    # _log_reflected_table(reflect_meta_data, table_name)
-    print("---")
-    # print(reflect_select_query(target_table, engine))
-    target_table = strip_table_constraints(target_table)
-    # print(create_external_table_redshift(target_table, "s3://bucket/key"))
-    query = reflect_select_query(target_table, engine)
-    df = pd.read_sql(query, con=engine)
-
-    df.to_parquet(
-        "test.parquet",
-        engine="pyarrow",
-        **{"version": "2.6", "coerce_timestamps": "us"},
-    )
