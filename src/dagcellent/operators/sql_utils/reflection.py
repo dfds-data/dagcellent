@@ -7,11 +7,10 @@ from typing import TYPE_CHECKING, TypeAlias
 import pyarrow as pa
 from sqlalchemy import (
     MetaData,
-    create_mock_engine,  # type: ignore[reportAttributeAccessIssue]
     select,
 )
 from sqlalchemy.dialects.mssql.base import UNIQUEIDENTIFIER
-from sqlalchemy.schema import Column, CreateTable, Table
+from sqlalchemy.schema import Column, Table
 
 
 class UnsupportedType(Exception):
@@ -112,21 +111,6 @@ def strip_table_constraints(table: Table) -> Table:
         table.name, _dummy_meta_data, *[Column(c.name, c.type) for c in table.columns]
     )
     return _dummy_table
-
-
-def create_external_table_redshift(
-    table: Table,
-    s3_location: str,
-    partitioned: bool = False,
-    dialect: str = "redshift://",
-    schema_name: str | None = None,
-) -> Query:
-    if schema_name:
-        table.schema = schema_name
-    mock = create_mock_engine(dialect, executor=lambda *args: None)  # type: ignore[reportUnknownVariableType]
-    query = f"{CreateTable(table).compile(dialect=mock.dialect)!s}"  # type: ignore[reportUnknownMember]
-    query = _external_table_query_redshift(query, s3_location, partitioned=partitioned)
-    return query
 
 
 def create_external_table_redshift_arrow(
