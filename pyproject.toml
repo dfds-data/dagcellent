@@ -278,6 +278,9 @@ show_error_codes = true
 disable_error_code = [
     "annotation-unchecked",
 ]
+exclude = [
+    "examles/*",
+]
 
 [tool.versioningit]
 default-version = "0.0.0+unknown"
