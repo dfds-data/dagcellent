@@ -51,7 +51,7 @@ jobs:
       - name: Build release distributions
         run: |
           # NOTE: put your own distribution build steps here.
-          python -m pip install hatch
+          python -m pip install hatch 'versioningit>=3.1.0'
           python -m hatch build
 
       - name: Upload distributions
