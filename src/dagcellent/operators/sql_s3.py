@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 from pyarrow import parquet as pq
 from sqlalchemy import create_engine, text
 
-from dagcellent.operators.sql_utils.reflection import (
+from dagcellent.data_utils.sql_reflection import (
     Query,
     pyarrow2redshift,
     reflect_meta_data,

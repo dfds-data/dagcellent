@@ -5,7 +5,7 @@ from typing import Any
 
 from airflow.models.baseoperator import BaseOperator
 
-from dagcellent.operators.sql_utils.reflection import (
+from dagcellent.data_utils.sql_reflection import (
     Query,
     create_external_table_redshift_arrow,
 )
