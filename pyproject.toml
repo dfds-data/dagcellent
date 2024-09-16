@@ -22,11 +22,16 @@ classifiers = [
 ]
 dependencies = [
     "apache-airflow>=2.9.1",
+    "apache-airflow-providers-amazon>=7.2.0",
     "apache-airflow-providers-microsoft-mssql >=3.2.0",
     "apache-airflow-providers-snowflake >= 5.1",
+    "apache-airflow-providers-common-sql[pandas,openlineage]",
     "tomli >= 2.0.1",
     "pyyaml>= 6.0.1",
     "pydantic >= 2.1.0",
+    "pandas > 2.0.0",
+    "awswrangler[redshift, postgres, sqlserver, deltalake] > 3.0.0",
+    "pyarrow >= 17.0.0",
 ]
 
 [project.urls]
@@ -135,7 +140,7 @@ directory = "misc"
 name = "Miscellaneous"
 showcontent = true
 
-[tool.pyright]
+[tool.basedpyright]
 include = ["src"]
 exclude = ["**/__pycache__",
     "src/experimental",
@@ -143,15 +148,13 @@ exclude = ["**/__pycache__",
 ]
 ignore = ["src/dagcellent/newfragments"]
 defineConstant = { DEBUG = true }
-stubPath = "src/stubs"
-
 typeCheckingMode = "strict"
 reportMissingImports = true
 reportMissingTypeStubs = false
+# stubPath = "src/stubs"
 
-pythonVersion = "3.6"
+pythonVersion = "3.11"
 pythonPlatform = "Linux"
-
 executionEnvironments = [
   { root = "src" }
 ]
@@ -274,6 +277,9 @@ pretty = true
 show_error_codes = true
 disable_error_code = [
     "annotation-unchecked",
+]
+exclude = [
+    "examles/*",
 ]
 
 [tool.versioningit]

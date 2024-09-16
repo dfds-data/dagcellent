@@ -62,7 +62,16 @@ jobs:
 
       - name: Publish
         run: |
-          python -m hatch publish -r '${{env.AZURE_ARTIFACTS_FEED_URL}}' -u 'GitHubAction' -a '${{env.AZURE_DEVOPS_TOKEN}}'
+          err=$(hatch publish -r $AZURE_ARTIFACTS_FEED_URL -u 'GitHubAction' -a $AZURE_DEVOPS_TOKEN 2>&1 >/dev/null || true)
+          if [[ -z "$err" ]]; then
+              exit 0
+          elif [[ "$err" == *"409"* ]]; then
+              echo Marking run as success. This version is already published.
+              echo $err
+              exit 0
+          fi
+          echo $err
+          exit 1
         env:
           AZURE_DEVOPS_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }} 
           AZURE_ARTIFACTS_FEED_URL: ${{ secrets.AZURE_ARTIFACTS_FEED_URL }}
