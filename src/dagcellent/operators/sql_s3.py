@@ -10,14 +10,12 @@ from airflow.providers.amazon.aws.transfers.sql_to_s3 import (
     FILE_FORMAT,
     NamedTemporaryFile,
     S3Hook,
-    SqlToS3Operator,
+    SqlToS3Operator as AWSSqlToS3Operator,
 )
 
 if TYPE_CHECKING:
     import pandas as pd
     from airflow.utils.context import Context
-
-import logging
 
 from pyarrow import parquet as pq
 from sqlalchemy import create_engine, text
@@ -28,8 +26,6 @@ from dagcellent.operators.sql_utils.reflection import (
     reflect_meta_data,
     reflect_select_query,
 )
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 class FileOptions(NamedTuple):
@@ -54,13 +50,11 @@ class StoragePaths(TypedDict):
     file: str
 
 
-class BatchSqlToS3Operator(SqlToS3Operator):
-    """Inheriting from SqlToS3Operator (v2.5.1) adding internal batching mechanism.
+class SqlToS3Operator(AWSSqlToS3Operator):
+    """Move data from SQL source to S3.
 
-    Avoids running out of memory error by setting chunksize for number of rows you can move in one batch.
-
-    Previously empty files would be written to S3 which will break the external
-    tables in Redshift. Checking for empty files was added as well.
+    Uses batching. Empty files are not written, which prevents breaking external
+    tables in Redshift.
 
     Partitioning
     If the data is partitioned, `run_date=` partitions will be used.
@@ -215,9 +209,7 @@ class BatchSqlToS3Operator(SqlToS3Operator):
         """
         if not self.partitioned:
             if not self.s3_key.endswith(self.file_options.suffix):
-                return (
-                    f"{self._s3_key_prefix}/{BatchSqlToS3Operator.DEFAULT_PARTITION}/"
-                )
+                return f"{self._s3_key_prefix}/{SqlToS3Operator.DEFAULT_PARTITION}/"
             else:
                 return f"{self.s3_key}"
         else:
