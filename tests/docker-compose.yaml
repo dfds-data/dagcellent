@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  #  airflow:
+  #    build: .
+  #    ports:
+  #      - "8080:8080"
+  #    container_name: airflow
+  #    restart: always
+  #    depends_on:
+  #      - db
+  #    volumes:
+  #      - ./dags:/usr/local/airflow/dags
+
+  db:
+    container_name: sql-server
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${Sa_Password:-Alma1234}
+      MSSQL_PID: Developer
+    ports:
+      - 1433:1433
+    volumes:
+      - my-volume:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P ${Sa_Password:-Alma1234} -Q 'SELECT 1' -No || exit 1"]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+
+  sqlserver.configurator:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      bash -c '
+      /opt/mssql-tools18/bin/sqlcmd -S mssql -U sa -P ${Sa_Password:-Alma1234} -d master -i docker-entrypoint-initdb.d/init.sql -No;
+      echo "All done!";
+      '
+
+        #  db:
+        #    container_name: postgresql
+        #    image: postgres:15.8
+        #    restart: always
+        #    user: postgres
+        #    ports:
+        #      - "5432:5432"
+        #    environment:
+        #      POSTGRES_PASSWORD: Alma1234
+        #      POSTGRES_USER: postgres
+        #    volumes:
+        #      - pgdata:/var/lib/postgresql/data 
+        #      - ./init/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
+        #        #- /Users/timon/work/airflow_k8s_dag/k8s-airflow-dags/dags/operators/dag_onprem/init/postgres_init.sql:docker-entrypoint-initdb.d/postgres_init.sql
+        #    healthcheck:
+        #      test: ["CMD-SHELL", "pg_isready"]
+        #      interval: 1s
+        #      timeout: 5s
+        #      retries: 10
+      
+        #  db.configurator:
+        #    image: postgres:15.8
+        #    volumes:
+        #      - ./init:/docker-entrypoint-initdb.d
+        #    depends_on:
+        #      db:
+        #        condition: service_healthy
+        #    command: >
+        #      bash -c '
+        #      /opt/mssql-tools18/bin/sqlcmd -S mssql -U sa -P ${Sa_Password:-Alma1234} -d master -i docker-entrypoint-initdb.d/postgres_init.sql -No;
+        #      echo "All done!";
+        #      '
+
+volumes:
+  my-volume:
+  pgdata:
