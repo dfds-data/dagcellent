@@ -69,7 +69,6 @@ extra-dependencies = [
     "pytest >= 8.0.0",
     "pytest-cov",
     "pytest-mock >= 3.14.0",
-    "versioningit",
 ]
 
 [[tool.hatch.envs.test.matrix]]

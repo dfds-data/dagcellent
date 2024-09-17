@@ -1,4 +1,5 @@
 """Module to help creating Dynamic DAGs in Airflow."""
+
 from __future__ import annotations
 
 import json
