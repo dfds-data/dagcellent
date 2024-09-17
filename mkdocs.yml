@@ -30,8 +30,8 @@ markdown_extensions:
 theme:
   name: material
   custom_dir: docs/custom_theme
-  favicon: images/icons/logo-light.svg
-  logo: images/icons/logo-light.svg
+  favicon: images/icons/logo.svg
+  logo: images/icons/logo.svg
   features:
     - navigation.tabs
     - navigation.indexes
