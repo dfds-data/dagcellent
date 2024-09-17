@@ -4,6 +4,7 @@
 doc/changes/*
 src/dagcellent/__about__.py
 assets/*.xml
+tmp/
 
 # Environments #
 ################
