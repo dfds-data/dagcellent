@@ -75,7 +75,10 @@ check = "mypy --install-types --non-interactive {args:src/dagcellent tests}"
 
 [tool.hatch.envs.docs]
 extra-dependencies = [
-  "mkdocs",
+  "mkdocs-material",
+  "mkdocstrings",
+  "mkdocstrings-python",
+  "mkdocs-git-revision-date-localized-plugin",
 ]
 [tool.hatch.envs.docs.scripts]
 serve = "mkdocs serve"
