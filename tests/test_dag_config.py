@@ -1,10 +1,11 @@
 """Test dynamic DAG configuration."""
+
 from __future__ import annotations
 
 import pathlib
 
 import pytest
-from dagcellent.dynamic_dag import Config, parse_config_file
+from dagcellent.dag import Config, parse_config_file
 from pydantic import ValidationError
 
 
