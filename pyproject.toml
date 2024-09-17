@@ -39,6 +39,15 @@ Documentation = "https://github.com/dfds-data/dagcellent#readme"
 Issues = "https://github.com/dfds-data/dagcellent/issues"
 Source = "https://github.com/dfds-data/dagcellent"
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.*",
+  "/docs",
+  "/tests"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dagcellent"]
 
 [tool.hatch.envs.default]
 installer = "uv"
@@ -111,8 +120,8 @@ package = "dagcellent"
 package_dir = "src"
 # Where you want your news files to come out. This can be .rst
 # or .md, towncrier's default template works with both.
-filename = "doc/changelog.rst"
-directory = "doc/changes"
+filename = "docs/changelog.rst"
+directory = "docs/changes"
 
 [[tool.towncrier.type]]
 directory = "deprecation"
@@ -131,7 +140,7 @@ directory = "removal"
 name = "Removals"
 showcontent = true
 [[tool.towncrier.type]]
-directory = "doc"
+directory = "docs"
 name = "Documentation"
 showcontent = true
 [[tool.towncrier.type]]
