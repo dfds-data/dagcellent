@@ -20,6 +20,3 @@ To enable test discovery and test debugging, change the *python interpreter path
 # No VSCode
 Cheat sheet:
 - tests: `hatch test`
-
-# Documentation
-The docs is built into "sites" folder. This is gitignored and the docs is built in CI.
