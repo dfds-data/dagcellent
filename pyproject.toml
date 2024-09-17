@@ -73,6 +73,13 @@ extra-dependencies = [
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/dagcellent tests}"
 
+[tool.hatch.envs.docs]
+extra-dependencies = [
+  "mkdocs",
+]
+[tool.hatch.envs.docs.scripts]
+serve = "mkdocs serve"
+
 [tool.hatch.envs.test]
 extra-dependencies = [
     "pytest >= 8.0.0",
