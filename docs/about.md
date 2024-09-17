@@ -11,7 +11,7 @@ Some of the features of Dagcellent are:
 ## Why?
 You might ask - why a separate package and not just shove everything into the `dags` folder of Airflow.
 
-We are running more and more business-critical work flows on Airflow. In order to ensure business continuity and reduce the risk of errors, we need more reliable and maintainable building blocks.
+That works for development. However, we are running more and more business-critical work flows on Airflow. In order to ensure business continuity and reduce the risk of errors, we need more reliable and maintainable building blocks.
 
 
 - *Maintainability*: You can reuse the components across multiple DAGs.
