@@ -1,4 +1,4 @@
-# dagcellent
+# ✨ dagcellent
 
 [![PyPI - Version](https://img.shields.io/pypi/v/dagcellent.svg)](https://pypi.org/project/dagcellent)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/dagcellent.svg)](https://pypi.org/project/dagcellent)
