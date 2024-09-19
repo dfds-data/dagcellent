@@ -78,6 +78,8 @@ plugins:
             filters:
               - "!^_"
               - "^__init__$"
+              # Hide some methods that are part of Airflow Operator interface
+              - "!^execute$"
 
 extra_css:
   - stylesheets/custom.css
@@ -86,4 +88,10 @@ nav:
   - Home: index.md
   - About: about.md
   - Contributing: contributing.md
-  - reference.md
+  - Reference:
+      - "reference/index.md"
+      - Operators: "reference/operators.md"
+      - Dag:
+          - "reference/dag.md"
+      - Data utilities:
+          - "reference/data_utils.md"
