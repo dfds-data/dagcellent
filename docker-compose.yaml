@@ -1,0 +1,26 @@
+# This is a development/debug image. DO NOT USE in production environments
+# under ANY circumstances. DO NOT use production level configurations/
+# secrets under ANY circumstances.
+#
+# 2024 viotiom@dfds.com
+#
+version: '3.8'
+
+services:
+  airflow:
+    build: .
+    ports:
+      - "8080:8080"
+    container_name: airflow
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      - ./tests/dags:/opt/airflow/dags
+      - ./:/opt/dagcellent/
+    environment:
+      AIRFLOW__LOGGING__LOGGING_LEVEL: "DEBUG"
+      AIRFLOW__LOGGING__FAB_LOGGING_LEVEL: "DEBUG"
+      AIRFLOW_CONN_POSTGRES_TEST: "postgres://postgres:Alma1234@postgresql:5432"
+      AIRFLOW_CONN_MSSQL_TEST: "mssql://sa:Alma1234@sql-server:1433"
+

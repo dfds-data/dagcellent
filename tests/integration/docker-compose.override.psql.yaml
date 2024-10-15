@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: postgresql
+    image: postgres:15.8
+    restart: always
+    user: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: Alma1234
+      POSTGRES_USER: postgres
+    volumes:
+      - db-volume-psql:/var/lib/postgresql/data 
+      - type: bind
+        source: ./tests/integration/init/postgres_init.sql
+        target: /docker-entrypoint-initdb.d/postgres_init.sql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-volume-psql:
