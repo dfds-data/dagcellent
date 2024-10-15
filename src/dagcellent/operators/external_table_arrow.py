@@ -19,7 +19,6 @@ class CreateExternalTableArrow(BaseOperator):
     custom_operator_name = "Howdy🧀 "
 
     template_fields: Sequence[str] = (
-        "target_conn_id",
         "sql_conn_id",
         "table_name",
         "s3_location",
@@ -33,7 +32,6 @@ class CreateExternalTableArrow(BaseOperator):
         sql_conn_id: str,
         database: str,
         schema_name: str,
-        target_conn_id: str,
         s3_location: str,
         type_map: dict[str, str],
         partitioned: bool = False,
@@ -46,7 +44,6 @@ class CreateExternalTableArrow(BaseOperator):
         Args:
             table_name (str): The name of the table to create.
             sql_conn_id (str): The source connection id.
-            target_conn_id (str): The target connection id.
             s3_location (str): The S3 location of the data.
             force_drop (bool, optional): If True, drop the table first. Defaults to False.
             external_schema_name (str, optional): The schema name. Defaults to "src".
@@ -64,7 +61,6 @@ class CreateExternalTableArrow(BaseOperator):
                 task_id="create_external_table",
                 table_name="my_table",
                 sql_conn_id="my_conn",
-                target_conn_id="my_target_conn",
                 s3_location="s3://my-bucket/my-folder/",
                 force_drop=True,
             )
@@ -76,7 +72,6 @@ class CreateExternalTableArrow(BaseOperator):
         self.schema_name = schema_name
         self.force_drop = force_drop
         self.sql_conn_id = sql_conn_id
-        self.target_conn_id = target_conn_id
         self.type_map = type_map
         self.s3_location = s3_location
         self.external_schema_name = external_schema_name
@@ -103,9 +98,5 @@ class CreateExternalTableArrow(BaseOperator):
         self.xcom_push(context, key="partition_query", value=partition_query)
         message = "🍇"
         self.log.info(message)
-        #  target_engine = self._get_hook(self.target_conn_id).get_sqlalchemy_engine()
-        #  result = engine.execute(text(self.query))
-        #  # names = [row[0] for row in result]
-        #  self.log.info(f"Result: {result}")
         self.xcom_push(context, key="query", value=self.query)
         return self.query
