@@ -10,14 +10,19 @@ ENV AIRFLOW__CORE__LOAD_EXAMPLES='true'
 FROM base AS deps
 USER airflow
 
-RUN pip install apache-airflow-providers-microsoft-mssql apache-airflow-providers-amazon --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.9.1/constraints-3.12.txt"
+RUN pip install apache-airflow-providers-postgres apache-airflow-providers-microsoft-mssql apache-airflow-providers-amazon --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.9.1/constraints-3.12.txt"
+COPY ./ /opt/dagcellent/
+WORKDIR /opt/dagcellent
+RUN pip install -e . 
 
 
 FROM deps
 
-ENV AIRFLOW__CORE__LOAD_EXAMPLES=True
+ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
 
 VOLUME /opt/airflow/dags
+VOLUME /opt/dagcellent/
+
 ENTRYPOINT [ "airflow" ]
 CMD ["standalone"]
 
