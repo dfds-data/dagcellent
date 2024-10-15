@@ -6,12 +6,15 @@ from collections.abc import Iterable, Sequence
 from contextlib import closing
 from typing import TYPE_CHECKING, Any, NamedTuple, TypedDict
 
+from airflow.models.connection import Connection
 from airflow.providers.amazon.aws.transfers.sql_to_s3 import (
     FILE_FORMAT,
     NamedTemporaryFile,
     S3Hook,
     SqlToS3Operator as AWSSqlToS3Operator,
 )
+
+from dagcellent._connection import ConnectionType
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -105,7 +108,7 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         self,
         database: str,
         schema_name: str,
-        table_name: str,
+        table_name: str | None,
         chunksize: int = 10**6,
         fix_dtypes: bool = True,
         where_clause: str | None = None,
@@ -127,6 +130,16 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         self.where_clause = where_clause
         self.join_clause = join_clause
         self.log.setLevel("NOTSET")
+
+    def _supported_source_connections(self) -> list[str]:
+        conn = Connection.get_connection_from_secrects(self.sql_conn_id)
+        match conn.conn_type:
+            case ConnectionType.MSSQL:
+                return [ConnectionType.MSSQL]
+            case ConnectionType.POSTGRES:
+                return [ConnectionType.POSTGRES]
+            case _:
+                raise ValueError("Unsupported connection type.")
 
     def _create_select_query(self) -> Query:
         """Reflects the table from the database."""
