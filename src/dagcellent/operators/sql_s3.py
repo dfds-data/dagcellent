@@ -116,12 +116,9 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         **kwargs: Any,
     ) -> None:  # type: ignore
         """Override constructor with extra chunksize argument."""
-        if kwargs.get("query", None):
-            self.log.error("Query will be overwritten.")
-        kwargs["query"] = "thez nutz"
-
         super().__init__(**kwargs)  # type: ignore[UnknownTypeMember]
-        self.log.info("%s", f"Query: {kwargs['query']}")
+        if kwargs.get("query", None):
+            self.log.info("%s", f"Query: {kwargs['query']}")
         self.chunksize = chunksize
         self.fix_dtypes = fix_dtypes
         self.database = database
@@ -279,10 +276,13 @@ class SqlToS3Operator(AWSSqlToS3Operator):
     def execute(self, context: Context) -> None:
         """Logic of the operator."""
         print(f"log level: {self.log.level=}")
-        self.query = self._create_select_query()
-        self.log.info("::group::query")
-        self.log.info(text(self.query))
-        self.log.info("::endgroup::")
+
+        if not self.query:  # type: ignore[has-type]
+            self.log.info("Generating query...")
+            self.query = self._create_select_query()
+            self.log.info("::group::query")
+            self.log.info(text(self.query))
+            self.log.info("::endgroup::")
 
         s3_conn = S3Hook(aws_conn_id=self.aws_conn_id, verify=self.verify)
 
