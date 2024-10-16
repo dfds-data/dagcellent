@@ -15,47 +15,47 @@ class SQLReflectOperator(SQLExecuteQueryOperator):
 
     The target_table is returned as a `SELECT` statement DDL.
 
-    Example
-    The example below illustrates a PostrgeSQL database and the
-    returned SELECT query.
+    Example:
+        The example below illustrates a PostrgeSQL database and the
+        returned SELECT query.
 
-    ```sql
-    CREATE TABLE IF NOT EXISTS ats
-    (
-        departure_id varchar(40) COLLATE pg_catalog."default" NOT NULL,
-        route_leg_code varchar(40) COLLATE pg_catalog."default" NOT NULL,
-        planned_departure_date_time timestamp without time zone NOT NULL,
-        ferry_name varchar(40) COLLATE pg_catalog."default" NOT NULL,
-        cnv_outlet varchar(40) COLLATE pg_catalog."default" NOT NULL,
-        store_name varchar(40) COLLATE pg_catalog."default" NOT NULL,
-        store_item varchar(200) COLLATE pg_catalog."default" NOT NULL,
-        predicted_sales double precision NOT NULL,
-        good boolean DEFAULT false,
-        CONSTRAINT ats_pkey PRIMARY KEY (departure_id, route_leg_code, ferry_name, cnv_outlet, store_name, store_item)
-    );
-    ```
+        ```sql
+        CREATE TABLE IF NOT EXISTS ats
+        (
+            departure_id varchar(40) COLLATE pg_catalog."default" NOT NULL,
+            route_leg_code varchar(40) COLLATE pg_catalog."default" NOT NULL,
+            planned_departure_date_time timestamp without time zone NOT NULL,
+            ferry_name varchar(40) COLLATE pg_catalog."default" NOT NULL,
+            cnv_outlet varchar(40) COLLATE pg_catalog."default" NOT NULL,
+            store_name varchar(40) COLLATE pg_catalog."default" NOT NULL,
+            store_item varchar(200) COLLATE pg_catalog."default" NOT NULL,
+            predicted_sales double precision NOT NULL,
+            good boolean DEFAULT false,
+            CONSTRAINT ats_pkey PRIMARY KEY (departure_id, route_leg_code, ferry_name, cnv_outlet, store_name, store_item)
+        );
+        ```
 
-    ```python
-    reflect_table = SQLReflectOperator(
-        table_name="ats",
-        task_id="reflect_database",
-        conn_id=CONN_ID,
-    )
-    ```
+        ```python
+        reflect_table = SQLReflectOperator(
+            table_name="ats",
+            task_id="reflect_database",
+            conn_id=CONN_ID,
+        )
+        ```
 
-    ```sql
-    SELECT
-        ats.departure_id,
-        ats.route_leg_code,
-        ats.planned_departure_date_time,
-        ats.ferry_name,
-        ats.cnv_outlet,
-        ats.store_name,
-        ats.store_item,
-        ats.predicted_sales,
-        ats.good
-    FROM ats
-    ```
+        ```sql
+        SELECT
+            ats.departure_id,
+            ats.route_leg_code,
+            ats.planned_departure_date_time,
+            ats.ferry_name,
+            ats.cnv_outlet,
+            ats.store_name,
+            ats.store_item,
+            ats.predicted_sales,
+            ats.good
+        FROM ats
+        ```
     """
 
     def __init__(
@@ -64,6 +64,12 @@ class SQLReflectOperator(SQLExecuteQueryOperator):
         table_name: str | None,
         **kwargs: Any,
     ) -> None:
+        """Init.
+
+        Args:
+            table_name: target table name
+            kwargs: additional arguments to pass to SQLExecuteQueryOperator
+        """
         self.table_name = table_name
         super().__init__(sql="", **kwargs)  # type: ignore
 

@@ -12,7 +12,7 @@ from dagcellent.data_utils.sql_reflection import (
 
 
 class CreateExternalTableArrow(BaseOperator):
-    """Create an external table in target database."""
+    """Generate SQL DDL to create external table in target database."""
 
     ui_color = "#6feeb7"
     ui_fgcolor = "#351c75"
