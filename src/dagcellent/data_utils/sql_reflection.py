@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 import warnings
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TYPE_CHECKING, Any, Protocol, TypeAlias
 
 import pyarrow as pa
 from sqlalchemy import (
@@ -26,43 +26,67 @@ if TYPE_CHECKING:
 Query: TypeAlias = str
 
 
-def pyarrow2redshift(dtype: pa.DataType, string_type: str) -> str:
-    """Pyarrow to Redshift data types conversion."""
-    if pa.types.is_int8(dtype):
-        return "SMALLINT"
-    if pa.types.is_int16(dtype) or pa.types.is_uint8(dtype):
-        return "SMALLINT"
-    if pa.types.is_int32(dtype) or pa.types.is_uint16(dtype):
-        return "INTEGER"
-    if pa.types.is_int64(dtype) or pa.types.is_uint32(dtype):
-        return "BIGINT"
-    if pa.types.is_uint64(dtype):
-        raise UnsupportedType(
-            "There is no support for uint64, please consider int64 or uint32."
-        )
-    if pa.types.is_float32(dtype):
-        return "FLOAT4"
-    if pa.types.is_float64(dtype):
-        return "FLOAT8"
-    if pa.types.is_boolean(dtype):
-        return "BOOL"
-    if pa.types.is_string(dtype) or pa.types.is_large_string(dtype):
-        return string_type
-    if pa.types.is_timestamp(dtype):
-        return "TIMESTAMP"
-    if pa.types.is_date(dtype):
-        return "DATE"
-    if pa.types.is_time(dtype):
-        return "TIME"
-    if pa.types.is_binary(dtype):
-        return "VARBYTE"
-    if pa.types.is_decimal(dtype):
-        return f"DECIMAL({dtype.precision},{dtype.scale})"  # type: ignore[reportAttributeAccessIssue]
-    if pa.types.is_dictionary(dtype):
-        return pyarrow2redshift(dtype=dtype.value_type, string_type=string_type)  # type: ignore[reportUnknownMember]
-    if pa.types.is_list(dtype) or pa.types.is_struct(dtype) or pa.types.is_map(dtype):
-        return "SUPER"
-    raise UnsupportedType(f"Unsupported Redshift type: {dtype}")
+class PyarrowMapping(Protocol):
+    """Map Pyarrow types to target system's types."""
+
+    def map(self: PyarrowMapping, dtype: pa.DataType, *args: Any, **kwargs: Any) -> str:
+        """Type mapping interface.
+
+        Args:
+            self:
+            dtype:
+        """
+        ...
+
+
+class Pyarrow2redshift:
+    """Map Apache Arrow to Redshift."""
+
+    @classmethod
+    def map(cls: PyarrowMapping, dtype: pa.DataType, string_type: str) -> str:
+        """Pyarrow to Redshift data types conversion."""
+        if pa.types.is_int8(dtype):
+            return "SMALLINT"
+        if pa.types.is_int16(dtype) or pa.types.is_uint8(dtype):
+            return "SMALLINT"
+        if pa.types.is_int32(dtype) or pa.types.is_uint16(dtype):
+            return "INTEGER"
+        if pa.types.is_int64(dtype) or pa.types.is_uint32(dtype):
+            return "BIGINT"
+        if pa.types.is_uint64(dtype):
+            raise UnsupportedType(
+                "There is no support for uint64, please consider int64 or uint32."
+            )
+        if pa.types.is_float32(dtype):
+            return "FLOAT4"
+        if pa.types.is_float64(dtype):
+            return "FLOAT8"
+        if pa.types.is_boolean(dtype):
+            return "BOOL"
+        if pa.types.is_string(dtype) or pa.types.is_large_string(dtype):
+            return string_type
+        if pa.types.is_timestamp(dtype):
+            return "TIMESTAMP"
+        if pa.types.is_date(dtype):
+            return "DATE"
+        if pa.types.is_time(dtype):
+            return "TIME"
+        if pa.types.is_binary(dtype):
+            return "VARBYTE"
+        if pa.types.is_decimal(dtype):
+            return f"DECIMAL({dtype.precision},{dtype.scale})"  # type: ignore[reportAttributeAccessIssue]
+        if pa.types.is_dictionary(dtype):
+            return cls.map(dtype=dtype.value_type, string_type=string_type)  # type: ignore[reportUnknownMember]
+        if (
+            pa.types.is_list(dtype)
+            or pa.types.is_struct(dtype)
+            or pa.types.is_map(dtype)
+        ):
+            return "SUPER"
+        if pa.types.is_null(dtype):
+            warnings.warn("Experimental NULL value derived.", stacklevel=2)
+            return "NULL"
+        raise UnsupportedType(f"Unsupported Redshift type: {dtype}")
 
 
 def drop_unsupported_dtypes(table: Table) -> Table:

@@ -24,8 +24,9 @@ from pyarrow import parquet as pq
 from sqlalchemy import create_engine, text
 
 from dagcellent.data_utils.sql_reflection import (
+    Pyarrow2redshift,
+    PyarrowMapping,
     Query,
-    pyarrow2redshift,
     reflect_meta_data,
     reflect_select_query,
 )
@@ -113,6 +114,7 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         fix_dtypes: bool = True,
         where_clause: str | None = None,
         join_clause: str | None = None,
+        type_mapping: PyarrowMapping = Pyarrow2redshift,
         **kwargs: Any,
     ) -> None:  # type: ignore
         """Override constructor with extra chunksize argument."""
@@ -126,6 +128,7 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         self.table_name = table_name
         self.where_clause = where_clause
         self.join_clause = join_clause
+        self.type_mapping = type_mapping
         self.log.setLevel("NOTSET")
 
     def _supported_source_connections(self) -> list[str]:
@@ -164,7 +167,6 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         return select_ddl
 
     def _get_pandas_data(self, sql: str) -> Iterable[pd.DataFrame]:
-
         import pandas.io.sql as psql
 
         sql_hook = self._get_hook()
@@ -172,7 +174,10 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         # NOTE pd type annotations are net strict enough
         with closing(sql_hook.get_conn()) as conn:  # type: ignore
             yield from psql.read_sql(  # type: ignore
-                sql, con=conn, params=self.params, chunksize=self.chunksize  # type: ignore
+                sql,
+                con=conn,
+                params=self.params,
+                chunksize=self.chunksize,  # type: ignore
             )
 
     def _clean_s3_folder(self, s3_hook: S3Hook, path: str) -> bool:
@@ -321,11 +326,11 @@ class SqlToS3Operator(AWSSqlToS3Operator):
                     # Get schema and xcom only once
                     # NOTE pyarrow did not type hint the read_schema method
                     s = pq.read_schema(tmp_file.name)  # type: ignore[UnknownTypeMember]
-                    redshift_map = {  # type: ignore[UnknownTypeMember]
-                        k: pyarrow2redshift(v, "VARCHAR")  # type: ignore[no-untyped-call]
+                    _mapped_type = {  # type: ignore[UnknownTypeMember]
+                        k: self.type_mapping.map(v, "VARCHAR")  # type: ignore[no-untyped-call]
                         for k, v in zip(s.names, s.types)  # type: ignore[no-untyped-call]
                     }
-                    self.xcom_push(context, key="type_map", value=redshift_map)
+                    self.xcom_push(context, key="type_map", value=_mapped_type)
                     first_run = False
 
                 self.log.info("Uploading data to S3")
