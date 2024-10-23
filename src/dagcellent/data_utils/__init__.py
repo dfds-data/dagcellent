@@ -3,9 +3,9 @@ from __future__ import annotations
 
 # pyright: reportUnknownVariableType=false
 from dagcellent.data_utils.sql_reflection import (
+    Pyarrow2redshift,
     Query,
     UnsupportedType,
-    pyarrow2redshift,
     reflect_meta_data,
     reflect_select_query,
 )
@@ -13,7 +13,7 @@ from dagcellent.data_utils.sql_reflection import (
 __all__ = [
     "Query",
     "UnsupportedType",
-    "pyarrow2redshift",
+    "Pyarrow2redshift",
     "reflect_meta_data",
     "reflect_select_query",
 ]
