@@ -3,7 +3,6 @@ from __future__ import annotations
 import random
 import string
 from collections.abc import Iterable, Sequence
-from contextlib import closing
 from typing import TYPE_CHECKING, Any, NamedTuple, TypedDict
 
 from airflow.models.connection import Connection
@@ -19,12 +18,14 @@ from dagcellent._connection import ConnectionType
 if TYPE_CHECKING:
     import pandas as pd
     from airflow.utils.context import Context
+    from sqlalchemy.engine import Engine
 
 from pyarrow import parquet as pq
 
 from dagcellent.data_utils.sql_reflection import (
     Pyarrow2redshift,
     PyarrowMapping,
+    safe_add_database_to_connection,
 )
 
 
@@ -81,7 +82,6 @@ class SqlToS3Operator(AWSSqlToS3Operator):
 
     template_fields: Sequence[str] = (
         "database",
-        "schema_name",
         "s3_bucket",
         "s3_key",
         "query",
@@ -104,7 +104,6 @@ class SqlToS3Operator(AWSSqlToS3Operator):
     def __init__(
         self,
         database: str,
-        schema_name: str,
         table_name: str | None,
         chunksize: int = 10**6,
         fix_dtypes: bool = True,
@@ -120,12 +119,10 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         self.chunksize = chunksize
         self.fix_dtypes = fix_dtypes
         self.database = database
-        self.schema_name = schema_name
         self.table_name = table_name
         self.where_clause = where_clause
         self.join_clause = join_clause
         self.type_mapping = type_mapping
-        self.log.setLevel("NOTSET")
 
     def _supported_source_connections(self) -> list[str]:
         conn = Connection.get_connection_from_secrects(self.sql_conn_id)
@@ -137,14 +134,21 @@ class SqlToS3Operator(AWSSqlToS3Operator):
             case _:
                 raise ValueError("Unsupported connection type.")
 
-    def _get_pandas_data(self, sql: str) -> Iterable[pd.DataFrame]:
-        import pandas.io.sql as psql
-
+    def _sql_hook_with_db(self) -> Engine:
         sql_hook = self._get_hook()
+        engine = sql_hook.get_sqlalchemy_engine()  # type: ignore
+        # inject database name if not defined in connection URI
+        # This works, but cannot cross query/reflect properly
+        return safe_add_database_to_connection(engine, self.database)
 
-        # NOTE pd type annotations are net strict enough
-        with closing(sql_hook.get_conn()) as conn:  # type: ignore
-            yield from psql.read_sql(  # type: ignore
+    def _get_pandas_data(self, sql: str) -> Iterable[pd.DataFrame]:
+        import pandas.io.sql as panda_sql
+
+        engine = self._sql_hook_with_db()
+
+        # NOTE pd type annotations are not strict enough
+        with engine.connect() as conn:  # type: ignore
+            yield from panda_sql.read_sql(  # type: ignore
                 sql,
                 con=conn,
                 params=self.params,
