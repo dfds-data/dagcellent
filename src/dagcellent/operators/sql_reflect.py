@@ -7,6 +7,7 @@ from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from dagcellent.data_utils.sql_reflection import (
     reflect_meta_data,
     reflect_select_query,
+    safe_add_database_to_connection,
 )
 
 
@@ -61,41 +62,43 @@ class SQLReflectOperator(SQLExecuteQueryOperator):
     def __init__(
         self,
         *,
-        table_name: str | None,
+        table_name: str,
+        database: str | None = None,
+        schema: str | None = None,
         **kwargs: Any,
     ) -> None:
         """Init.
 
         Args:
-            table_name: target table name
+            table: target table name
             kwargs: additional arguments to pass to SQLExecuteQueryOperator
         """
+        # TODO: deprecate this, for now inheritance needs debugging
+        self.database_name = database
+        kwargs["database"] = database
         self.table_name = table_name
+        self.schema = schema
         super().__init__(sql="", **kwargs)  # type: ignore
 
     def execute(self, context: Any):
         hook = self.get_db_hook()
-        self.log.debug("Target connection: %s", hook.get_conn())
         engine = hook.get_sqlalchemy_engine()  # type: ignore
-        # inject database name if not defined in connection URI
-        # This works, but cannot cross query/reflect properly
+        self.log.debug("%s", f"{self.database_name=}")
+        if self.database_name:
+            # inject database name if not defined in connection URI
+            self.log.debug("here")
+            self.log.debug("Target connection: %s", f"{engine.url.database=}")
+            engine = safe_add_database_to_connection(engine, self.database_name)
+        self.log.debug("not here")
+        self.log.debug("Target connection: %s", engine.url)
 
-        meta_data = reflect_meta_data(engine)  # type: ignore
-        if meta_data.tables is None:  # type: ignore[reportUnnecessaryCondition]
-            raise ValueError("No metadata found for the database.")
-
-        self.log.debug("::group::🦆")
-        _tables = meta_data.tables.keys()
-        self.log.debug("Tables: %s", _tables)
-        self.log.debug("::endgroup::")
-        try:
-            target_table = meta_data.tables[self.table_name]
-        except KeyError:
-            self.log.debug(
-                "Table %s not found.\nTables found: %s", self.table_name, _tables
-            )
+        table = reflect_meta_data(engine, schema=self.schema, table=self.table_name)
+        if table is None:  # type: ignore[reportUnnecessaryCondition]
             raise ValueError(f"Table {self.table_name} not found in the database.")
 
-        # TODO: FIX dbname and schema name target_table.schema = f"[{self.database}].[dbo]"
-        select_ddl = reflect_select_query(target_table, engine)  # type: ignore
+        self.log.debug("::group::🦆")
+        self.log.debug("Table: %s", table.__dict__)
+        self.log.debug("::endgroup::")
+
+        select_ddl = reflect_select_query(engine, table)
         return select_ddl
