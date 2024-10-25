@@ -21,14 +21,10 @@ if TYPE_CHECKING:
     from airflow.utils.context import Context
 
 from pyarrow import parquet as pq
-from sqlalchemy import create_engine, text
 
 from dagcellent.data_utils.sql_reflection import (
     Pyarrow2redshift,
     PyarrowMapping,
-    Query,
-    reflect_meta_data,
-    reflect_select_query,
 )
 
 
@@ -140,31 +136,6 @@ class SqlToS3Operator(AWSSqlToS3Operator):
                 return [ConnectionType.POSTGRES]
             case _:
                 raise ValueError("Unsupported connection type.")
-
-    def _create_select_query(self) -> Query:
-        """Reflects the table from the database."""
-        sql_hook = self._get_hook()
-        engine = sql_hook.get_sqlalchemy_engine()  # type: ignore
-        # inject database name if not defined in connection URI
-        # This works, but cannot cross query/reflect properly
-        engine_with_db = create_engine(str(engine.url) + f"/{self.database}")  # type: ignore
-
-        meta_data = reflect_meta_data(engine_with_db)  # type: ignore
-        if meta_data.tables is None:  # type: ignore[reportUnnecessaryCondition]
-            raise ValueError("No metadata found for the database.")
-        try:
-            target_table = meta_data.tables[self.table_name]
-        except KeyError:
-            print("Tables found: %s", meta_data.tables.keys())
-            self.log.debug("Tables found: %s", meta_data.tables.keys())
-            raise ValueError(f"Table {self.table_name} not found in the database.")
-        target_table.schema = f"[{self.database}].[{self.schema_name}]"
-        select_ddl = reflect_select_query(target_table, engine)  # type: ignore
-        if self.join_clause:
-            select_ddl = f"{select_ddl}{self.join_clause} "
-        if self.where_clause:
-            select_ddl = f"{select_ddl} {self.where_clause}"
-        return select_ddl
 
     def _get_pandas_data(self, sql: str) -> Iterable[pd.DataFrame]:
         import pandas.io.sql as psql
@@ -281,13 +252,6 @@ class SqlToS3Operator(AWSSqlToS3Operator):
     def execute(self, context: Context) -> None:
         """Logic of the operator."""
         print(f"log level: {self.log.level=}")
-
-        if not self.query:  # type: ignore[has-type]
-            self.log.info("Generating query...")
-            self.query = self._create_select_query()
-            self.log.info("::group::query")
-            self.log.info(text(self.query))
-            self.log.info("::endgroup::")
 
         s3_conn = S3Hook(aws_conn_id=self.aws_conn_id, verify=self.verify)
 

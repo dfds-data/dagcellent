@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, Protocol, TypeAlias
 import pyarrow as pa
 from sqlalchemy import (
     MetaData,
+    create_engine,
     select,
 )
 from sqlalchemy.dialects.mssql.base import UNIQUEIDENTIFIER
@@ -110,17 +111,46 @@ def drop_unsupported_dtypes(table: Table) -> Table:
     return _dummy_table
 
 
-def reflect_select_query(table: Table, engine: Engine) -> Query:
+def reflect_select_query(engine: Engine, table: Table) -> Query:
     """Reflect the select query from the meta data."""
     table = drop_unsupported_dtypes(table)
     return str(select([table]).compile(engine))  # type: ignore[reportUnknownMemberType]
 
 
-def reflect_meta_data(engine: Engine) -> MetaData:
+def _add_database_to_connection(engine: Engine, database: str) -> Engine:
+    """Add database to the end of the connection URI.
+
+    Args:
+        engine: Engine
+        database: str - name of the database
+
+    Returns:
+        Engine: engine with DB
+    """
+    return create_engine(str(engine.url) + f"/{database}")
+
+
+def safe_add_database_to_connection(engine: Engine, database: str) -> Engine:
+    """Safely add database to SqlAlchemy connection URI.
+
+    Args:
+        engine: Engine
+        database: str - name of the database
+
+    Returns:
+        Engine: engine with DB
+    """
+    if not engine.url.database:
+        logging.debug("No database defined in the connection.")
+        return _add_database_to_connection(engine, database)
+    else:
+        return engine
+
+
+def reflect_meta_data(engine: Engine, schema: str | None, table: str) -> Table | None:
     """Reflects the metadata from the engine."""
-    meta_data = MetaData()
-    meta_data.reflect(bind=engine)
-    return meta_data
+    meta_data = MetaData(schema=schema)
+    return Table(table, meta_data, autoload_with=engine)
 
 
 def _log_reflected_table(meta_data: MetaData, table_name: str) -> None:
