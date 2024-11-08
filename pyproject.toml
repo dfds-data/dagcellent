@@ -82,6 +82,7 @@ extra-dependencies = [
 ]
 [tool.hatch.envs.docs.scripts]
 serve = "mkdocs serve"
+build = "mkdocs build"
 
 [tool.hatch.envs.test]
 extra-dependencies = [
@@ -176,6 +177,8 @@ pythonPlatform = "Linux"
 executionEnvironments = [
   { root = "src" }
 ]
+venvPath = ".venv"
+venv = "dev"
 
 [tool.ruff]
 [tool.ruff.format]
