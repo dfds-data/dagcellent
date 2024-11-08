@@ -5,6 +5,8 @@
 
 -----
 
+Latest stable release documentation: [link](https://compass.dfds.cloud/dagcellent/)
+
 ## Table of Contents
 
 - [Installation](#installation)
