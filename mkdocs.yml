@@ -1,5 +1,5 @@
 site_name: Dagcellent Docs
-site_url: http://localhost:8000
+site_url: https://compass.dfds.cloud/dagcellent/
 
 markdown_extensions:
   - attr_list
@@ -56,12 +56,12 @@ theme:
 
 plugins: 
   - search
-  - git-revision-date-localized
   - autorefs
   - mkdocstrings:
       default_handler: python
       handlers:
         python:
+          paths: [src]
           options:
             modernize_annotations: false
             show_symbol_type_heading: true
