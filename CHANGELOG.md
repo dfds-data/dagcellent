@@ -6,6 +6,27 @@ All notable changes to this project will be documented in this file.
 
 ### 🚀 Features
 
+- Update CI with changelog generation
+- Update CI with changelog generation
+- Update CI with changelog generation
+- Update CI with changelog generation
+
+## [1.1.2] - 2024-11-13
+
+### ⚙️ Miscellaneous Tasks
+
+- *(cd)* Fix cd
+
+## [1.1.1] - 2024-11-13
+
+### ⚙️ Miscellaneous Tasks
+
+- *(cd)* Fix cd
+
+## [1.1.0] - 2024-11-13
+
+### 🚀 Features
+
 - Remove unused code
 - Add pyarrow2redshift mappaing
 - Remove unused code
@@ -26,7 +47,7 @@ All notable changes to this project will be documented in this file.
 - Fix versioning pipeline
 - Fix pipeline
 - Remove unused code
-- Add sql input option to SqlS3 operator
+- Add sql input option ot SqlS3 operator
 - *(operators)* Fix import error
 - *(operators)* Hotfix for reflections
 - Add database argument to sql2s3 operator
@@ -41,11 +62,11 @@ All notable changes to this project will be documented in this file.
 
 ### 📚 Documentation
 
-- Add examples directory
+- Add examles directory
 - Add mkdocs
 - Add docs content
 - Write more about
-- Add docs pipeline
+- Add docs pipline
 - Adjust wording
 - Update logo
 - Update logo
@@ -57,6 +78,7 @@ All notable changes to this project will be documented in this file.
 - Add docs deployment manifest
 - Extend readme
 - Change site_url
+- Add CI badge to README
 
 ### 🧪 Testing
 
@@ -69,6 +91,8 @@ All notable changes to this project will be documented in this file.
 - Fix ci
 - Fix ci
 - Fix ci
+- Update project meta-data and cd pipeline
+- *(ci)* Update pre-commit
 
 ### Build
 
