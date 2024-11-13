@@ -58,7 +58,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: git-cliff-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}*
+          file: dist/dagcellent-*
           file_glob: true
           overwrite: true
           tag: ${{ github.ref }}
