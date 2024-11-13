@@ -84,7 +84,7 @@ jobs:
   changelog:
     name: Generate changelog
     needs: test
-    if: contains(github.ref_name, env.MAIN_BRANCH)
+    if: ${{ contains(github.ref_name, 'trunk') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
