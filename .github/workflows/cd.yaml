@@ -1,0 +1,98 @@
+name: Continuous Deployment
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  generate-changelog:
+    name: Generate changelog
+    runs-on: ubuntu-22.04
+    outputs:
+      release_body: ${{ steps.git-cliff.outputs.content }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@main
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: -vv --latest --no-exec --github-repo ${{ github.repository }}
+
+  release-build:
+    name: Build release distributions 🔨👷
+    needs: generate-changelog
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install hatch
+        run: |
+          python -m pip install hatch
+
+      - name: Build release distributions
+        run: |
+          # NOTE: put your own distribution build steps here.
+          python -m pip install hatch
+          python -m hatch build
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+      - name: Publish to GitHub
+        if: ${{ !contains(github.ref, '-') }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: git-cliff-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}*
+          file_glob: true
+          overwrite: true
+          tag: ${{ github.ref }}
+          release_name: "Release v${{ env.RELEASE_VERSION }}"
+          body: "${{ needs.generate-changelog.outputs.release_body }}"
+
+      - name: Publish to GitHub (pre-release)
+        if: ${{ contains(github.ref, '-') }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: git-cliff-${{ env.RELEASE_VERSION }}-${{ matrix.build.TARGET }}*
+          file_glob: true
+          overwrite: true
+          tag: ${{ github.ref }}
+          release_name: "Pre-release v${{ env.RELEASE_VERSION }}"
+          prerelease: true
+
+      - name: Publish to AzureDevops Artifact
+        run: |
+          err=$(hatch publish -r $AZURE_ARTIFACTS_FEED_URL -u 'GitHubAction' -a $AZURE_DEVOPS_TOKEN 2>&1 >/dev/null || true)
+          if [[ -z "$err" ]]; then
+              exit 0
+          elif [[ "$err" == *"409"* ]]; then
+              echo Marking run as success. This version is already published.
+              echo $err
+              exit 0
+          fi
+        env:
+          AZURE_DEVOPS_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }} 
+          AZURE_ARTIFACTS_FEED_URL: ${{ secrets.AZURE_ARTIFACTS_FEED_URL }}
+
+
+      - name: Promote to Release on AzureDevops Artifact
+        # TODO: implement promotion
+        if: ${{ !contains(github.ref, '-') }}
+        run: echo 0
