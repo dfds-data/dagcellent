@@ -15,8 +15,8 @@ class CreateExternalTableArrow(BaseOperator):
     """Generate SQL DDL to create external table in target database."""
 
     ui_color = "#6feeb7"
-    ui_fgcolor = "#351c75"
-    custom_operator_name = "Howdy🧀 "
+    ui_fgcolor = "#4FD1C5"
+    custom_operator_name = "CreateExternalTableArrow ☁️"
 
     template_fields: Sequence[str] = (
         "sql_conn_id",

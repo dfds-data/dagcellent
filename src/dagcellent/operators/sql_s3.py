@@ -86,7 +86,6 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         "s3_key",
         "query",
         "sql_conn_id",
-        "table_name",
         "where_clause",
         "join_clause",
     )
@@ -103,7 +102,6 @@ class SqlToS3Operator(AWSSqlToS3Operator):
 
     def __init__(
         self,
-        table_name: str | None,
         chunksize: int = 10**6,
         fix_dtypes: bool = True,
         where_clause: str | None = None,
@@ -119,7 +117,6 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         self.chunksize = chunksize
         self.fix_dtypes = fix_dtypes
         self.database = database
-        self.table_name = table_name
         self.where_clause = where_clause
         self.join_clause = join_clause
         self.type_mapping = type_mapping
