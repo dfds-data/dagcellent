@@ -1,6 +1,11 @@
 # https://docs.astral.sh/ruff/integrations/#github-actions
 name: CI
+
 on: push
+
+env:
+  main_branch: trunk
+
 jobs:
   precommit:
     name: Pre-commit 🔥
@@ -76,3 +81,34 @@ jobs:
           AZURE_DEVOPS_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }} 
           AZURE_ARTIFACTS_FEED_URL: ${{ secrets.AZURE_ARTIFACTS_FEED_URL }}
 
+  changelog:
+    name: Generate changelog
+    needs: test
+    if: ${{ contains(github.ref_name, env.MAIN_BRANCH) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --verbose
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      - name: Commit
+        run: |
+          git checkout $MAIN_BRANCH
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          set +e
+          git add CHANGELOG.md
+          git commit -m "chore: update changelog"
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git $MAIN_BRANCH
