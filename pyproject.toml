@@ -14,11 +14,16 @@ authors = [
   { name = "Timon Viola", email = "viotimo@dfds.com" },
 ]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 6 - Mature",
   "Programming Language :: Python",
+  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
+  "License :: OSI Approved :: MIT License",
+  "Framework :: Apache Airflow",
+  "Framework :: Apache Airflow :: Provider",
 ]
 dependencies = [
     "apache-airflow>=2.9.1",
@@ -35,7 +40,8 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/dfds-data/dagcellent#readme"
+Homepage = "https://compass.dfds.cloud/dagcellent/"
+Documentation = "https://verbose-adventure-nvr2zl5.pages.github.io/"
 Issues = "https://github.com/dfds-data/dagcellent/issues"
 Source = "https://github.com/dfds-data/dagcellent"
 
@@ -304,7 +310,7 @@ exclude = [
 ]
 
 [tool.versioningit]
-default-version = "0.0.0+unknown"
+default-version = "0.0.0-unknown"
 
 [tool.versioningit.vcs]
 # The method key:
