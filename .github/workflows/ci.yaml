@@ -4,7 +4,7 @@ name: CI
 on: push
 
 env:
-  main_branch: trunk
+  MAIN_BRANCH: trunk
 
 jobs:
   precommit:
@@ -110,5 +110,5 @@ jobs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           set +e
           git add CHANGELOG.md
-          git commit -m "chore: update changelog"
+          git commit -m "chore: update changelog\n\n[skip ci]"
           git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git $MAIN_BRANCH
