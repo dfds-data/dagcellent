@@ -3,7 +3,6 @@ repos:
     rev: 22.10.0
     hooks:
     - id: black
-
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.5.2
     hooks:
@@ -13,18 +12,15 @@ repos:
           "--fix",
           "--exit-non-zero-on-fix"
         ]
-
   - repo: https://github.com/crate-ci/typos
-    rev: v1.16.1
+    rev: v1.16.20
     hooks:
-      - id: typos
-
+    - id: typos
+      stages: [commit]
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.10.1  # Use the sha / tag you want to point at
     hooks:
     -   id: mypy
-
-# https://github.com/compilerla/conventional-pre-commit
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.3.0
     hooks:
