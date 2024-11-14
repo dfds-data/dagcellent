@@ -89,7 +89,9 @@ nav:
   - About: about.md
   - Reference:
       - "reference/index.md"
-      - Operators: "reference/operators.md"
+      - Operators: 
+        - "reference/operators.md"
+        - MLFlow: "reference/operators.mlflow.md"
       - Dag:
           - "reference/dag.md"
       - Data utilities:

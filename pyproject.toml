@@ -37,6 +37,7 @@ dependencies = [
     "pandas > 2.0.0",
     "awswrangler[redshift, postgres, sqlserver, deltalake] > 3.0.0",
     "pyarrow >= 17.0.0",
+    "mlflow-skinny >= 2.17.2"
 ]
 
 [project.urls]
