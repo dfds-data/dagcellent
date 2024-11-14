@@ -1,8 +1,9 @@
-name: documentation 
+name: Documentation 
 on:
-  push:
-    branches:
-      - trunk
+    workflow_run:
+      workflows: [CI]
+      types: [completed]
+      branches: [trunk]
 permissions:
   contents: write
 
@@ -68,7 +69,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./docs.Dockerfile
+        file: ./k8s/docs.Dockerfile
         push: true
         tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
         builder: mybuilder
