@@ -83,6 +83,8 @@ All notable changes to this project will be documented in this file.
 - *(cd)* Fix cd
 - Update changelog\n\n[skip ci]
 - *(ci)* Change docs deployment trigger to CI completed
+- Update changelog\n\n[skip ci]
+- Fix ci
 
 ### Build
 
