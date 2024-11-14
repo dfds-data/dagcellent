@@ -63,6 +63,7 @@ All notable changes to this project will be documented in this file.
 - Change site_url
 - Add CI badge to README
 - Describe k8s hosted documentation
+- Fix changelog spelling
 
 ### 🧪 Testing
 
