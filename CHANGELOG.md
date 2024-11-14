@@ -6,27 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ### 🚀 Features
 
-- Update CI with changelog generation
-- Update CI with changelog generation
-- Update CI with changelog generation
-- Update CI with changelog generation
-
-## [1.1.2] - 2024-11-13
-
-### ⚙️ Miscellaneous Tasks
-
-- *(cd)* Fix cd
-
-## [1.1.1] - 2024-11-13
-
-### ⚙️ Miscellaneous Tasks
-
-- *(cd)* Fix cd
-
-## [1.1.0] - 2024-11-13
-
-### 🚀 Features
-
 - Remove unused code
 - Add pyarrow2redshift mappaing
 - Remove unused code
@@ -36,6 +15,10 @@ All notable changes to this project will be documented in this file.
 - Add SQLReflectOperator to operators interface
 - Make database kwarg optional on sql_s3 operator
 - Add docs publish
+- Update CI with changelog generation
+- Update CI with changelog generation
+- Update CI with changelog generation
+- Update CI with changelog generation
 
 ### 🐛 Bug Fixes
 
@@ -47,7 +30,7 @@ All notable changes to this project will be documented in this file.
 - Fix versioning pipeline
 - Fix pipeline
 - Remove unused code
-- Add sql input option ot SqlS3 operator
+- Add sql input option to SqlS3 operator
 - *(operators)* Fix import error
 - *(operators)* Hotfix for reflections
 - Add database argument to sql2s3 operator
@@ -62,11 +45,11 @@ All notable changes to this project will be documented in this file.
 
 ### 📚 Documentation
 
-- Add examles directory
+- Add examples directory
 - Add mkdocs
 - Add docs content
 - Write more about
-- Add docs pipline
+- Add docs pipeline
 - Adjust wording
 - Update logo
 - Update logo
@@ -79,11 +62,13 @@ All notable changes to this project will be documented in this file.
 - Extend readme
 - Change site_url
 - Add CI badge to README
+- Describe k8s hosted documentation
 
 ### 🧪 Testing
 
 - Add OCI files for later integration tests and tutorials
 - Add foundation for integration testing
+- Add tests and wip integration tests
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -93,6 +78,10 @@ All notable changes to this project will be documented in this file.
 - Fix ci
 - Update project meta-data and cd pipeline
 - *(ci)* Update pre-commit
+- *(cd)* Fix cd
+- *(cd)* Fix cd
+- Update changelog\n\n[skip ci]
+- *(ci)* Change docs deployment trigger to CI completed
 
 ### Build
 
