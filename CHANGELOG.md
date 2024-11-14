@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - Add database argument to sql2s3 operator
 - Fix docs publish
 - Clean up unused operator arguments
+- *(ci)* Fix docs docker image
 
 ### 🚜 Refactor
 
@@ -85,6 +86,7 @@ All notable changes to this project will be documented in this file.
 - *(ci)* Change docs deployment trigger to CI completed
 - Update changelog\n\n[skip ci]
 - Fix ci
+- Update changelog\n\n[skip ci]
 
 ### Build
 
@@ -94,6 +96,7 @@ All notable changes to this project will be documented in this file.
 - Add hatch plugin to release step
 - Rename doc -> docs
 - Update venv conventions
+- *(ci)* Fix build pipeline message
 
 ### Wip
 
