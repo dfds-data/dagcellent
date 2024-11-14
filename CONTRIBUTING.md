@@ -39,6 +39,10 @@ The latest version of the documentation is available on a github pages site, lin
 
 To preview the documentation locally, you need to start mkdocs server. See [Go to Cheat sheet](#cheat-sheet)  
 
+## Stable/User documentation
+
+The deployment manifests and Dockerfile for the k8s hosted docs site is under `k8s/`
+
 
 # Releases
 The project uses semantic versioning.
