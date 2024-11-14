@@ -1,6 +1,3 @@
-"""Test DAG to show the usage of SQL reflection
-and executing the returned query.
-"""
 from __future__ import annotations
 
 import datetime
@@ -14,21 +11,20 @@ DAG_ID = __file__.rstrip(".py").split("/")[-1]
 
 with DAG(
     dag_id=DAG_ID,
-    description=__doc__,
     start_date=datetime.datetime(2020, 2, 2),
     schedule="@once",
     catchup=False,
 ) as dag:
+
     reflect_table = SQLReflectOperator(
-        table_name="test",
-        task_id="reflect_database",
-        conn_id=CONN_ID,
+        task_id="reflect_database", conn_id=CONN_ID, table_name="kaka", database="model"
     )
 
-    create_pet_table = SQLExecuteQueryOperator(
-        task_id="create_pet_table",
+    execute = SQLExecuteQueryOperator(
+        task_id="execute_query",
         conn_id=CONN_ID,
         sql=reflect_table.output,
+        database="model",
     )
 
-    reflect_table >> create_pet_table
+    reflect_table >> execute

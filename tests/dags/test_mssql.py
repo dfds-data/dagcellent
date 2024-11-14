@@ -5,7 +5,7 @@ import datetime
 from airflow import DAG
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 
-DAG_ID = "mssql_operator_dag"
+DAG_ID = __file__.rstrip(".py").split("/")[-1]
 CONN_ID = "mssql_test"
 
 with DAG(

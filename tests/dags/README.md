@@ -1,0 +1,1 @@
+This folder contains future "DAG tests", with should be run in CI with running OCI images. At the moment we had not enough time to finish these integration tests, and it is one of the highest priorities.
