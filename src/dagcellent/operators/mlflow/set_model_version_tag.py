@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
 
-
 class SetModelVersionTag(BaseOperator):
     """Wrapper around MLFlowClient.set_model_version_tag.
 
