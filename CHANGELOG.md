@@ -65,6 +65,7 @@ All notable changes to this project will be documented in this file.
 - Add CI badge to README
 - Describe k8s hosted documentation
 - Fix changelog spelling
+- Update documentation
 
 ### 🧪 Testing
 
@@ -87,6 +88,7 @@ All notable changes to this project will be documented in this file.
 - Update changelog\n\n[skip ci]
 - Fix ci
 - Update changelog\n\n[skip ci]
+- Update changelog
 
 ### Build
 
@@ -97,6 +99,7 @@ All notable changes to this project will be documented in this file.
 - Rename doc -> docs
 - Update venv conventions
 - *(ci)* Fix build pipeline message
+- Add PR open trigger for changelog
 
 ### Wip
 
