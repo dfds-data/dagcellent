@@ -4,9 +4,23 @@ hide:
   - navigation
 ---
 
-# Welcome to Dagcellent
+# Welcome to ✨Dagcellent
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Dagcellent is a library, which contains reusable components to work with Apache Airflow. It is designed to make the development of Airflow DAGs easier and more efficient.
 
-!!! warning "Versioning"
-    The package follows semantic versioning. Breaking changes will occur unannounced before `v1.0.0`. After that all breaking changes will lead to bumping the major version number.
+
+Some of the features of Dagcellent are:
+ 
+- **Dynamic DAGs**: Create DAGs dynamically.
+- **DAG from config**: Create DAGs from a configuration file.
+- many more are coming!
+
+Check out the [Reference](reference/index.md) page for a full list of operators/modules.
+
+# Note
+
+The purpose of this page is to have a detailed reference documentation of the library. You will **NOT** find on this page detailed guides, tutorials. The following may help:
+
+- [Tutorials](https://github.com/dfds-data/dataplatform-dojo)
+- [How-to-guides](https://wiki.compass.dfds.cloud/en/PlatformGuides)
+

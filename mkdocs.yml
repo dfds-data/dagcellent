@@ -87,7 +87,6 @@ extra_css:
 nav:
   - Home: index.md
   - About: about.md
-  - Contributing: contributing.md
   - Reference:
       - "reference/index.md"
       - Operators: "reference/operators.md"
