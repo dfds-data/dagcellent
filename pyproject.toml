@@ -70,7 +70,7 @@ extra-dependencies = [
 [tool.hatch.envs.dev.scripts]
 install = "pre-commit install --hook-type commit-msg"
 version = "versioningit"
-changelog = "towncrier"
+changelog = "git-cliff -o CHANGELOG.md"
 
 [tool.hatch.envs.types]
 extra-dependencies = [

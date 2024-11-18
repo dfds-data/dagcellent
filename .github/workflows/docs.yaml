@@ -45,10 +45,12 @@ jobs:
       with:
         python-version: '3.11' 
 
+    - name: Install Hatch
+      run: pip install -U hatch
+
     - run: |
-        pip install mkdocs-material mkdocs-git-revision-date-localized-plugin mkdocstrings mkdocstrings-python
-        pip install -e .
-        mkdocs build
+        hatch env create docs
+        hatch run docs:build
       name: Install docs dependencies and build static files
 
     - name: Login to ECR

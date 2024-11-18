@@ -32,6 +32,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Set the release version
         shell: bash
         run: echo "RELEASE_VERSION=${GITHUB_REF:11}" >> $GITHUB_ENV
@@ -93,7 +94,6 @@ jobs:
         env:
           AZURE_DEVOPS_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }} 
           AZURE_ARTIFACTS_FEED_URL: ${{ secrets.AZURE_ARTIFACTS_FEED_URL }}
-
 
       - name: Promote to Release on AzureDevops Artifact
         # TODO: implement promotion
