@@ -30,85 +30,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install hatch
-      run: |
-        python -m pip install hatch
+    - name: Install Hatch
+      run: pip install -U hatch
 
     - name: Tests
       run: hatch run +py=${{ matrix.python-version }} test:test
 
-  release-build:
-    name: Build release distributions 🔨👷
-    needs: test
-    runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Install hatch
-        run: |
-          python -m pip install hatch
-
-      - name: Build release distributions
-        run: |
-          # NOTE: put your own distribution build steps here.
-          python -m pip install hatch
-          python -m hatch build
-
-      - name: Upload distributions
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-dists
-          path: dist/
-
-      - name: Publish
-        run: |
-          err=$(hatch publish -r $AZURE_ARTIFACTS_FEED_URL -u 'GitHubAction' -a $AZURE_DEVOPS_TOKEN 2>&1 >/dev/null || true)
-          if [[ -z "$err" ]]; then
-              exit 0
-          elif [[ "$err" == *"409"* ]]; then
-              echo Marking run as success. This version is already published.
-              echo $err
-              exit 0
-          fi
-        env:
-          AZURE_DEVOPS_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }} 
-          AZURE_ARTIFACTS_FEED_URL: ${{ secrets.AZURE_ARTIFACTS_FEED_URL }}
-
-  changelog:
-    name: Generate changelog
-    needs: test
-    if: ${{ contains(github.ref_name, 'trunk') }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Generate changelog
-        uses: orhun/git-cliff-action@v4
-        with:
-          config: cliff.toml
-          args: --verbose
-        env:
-          OUTPUT: CHANGELOG.md
-          GITHUB_REPO: ${{ github.repository }}
-
-      - name: Commit
-        run: |
-          git checkout $MAIN_BRANCH
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
-          set +e
-          git add CHANGELOG.md
-          git commit -m "chore: update changelog" -m "[skip ci]"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git $MAIN_BRANCH
