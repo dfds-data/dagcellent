@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.1.3] - 2024-11-18
 
 ### 🚀 Features
 
@@ -99,7 +99,9 @@ All notable changes to this project will be documented in this file.
 - Rename doc -> docs
 - Update venv conventions
 - *(ci)* Fix build pipeline message
+- *(ci)* Tweak github actions
 - Add PR open trigger for changelog
+- Remove PR action
 
 ### Wip
 
