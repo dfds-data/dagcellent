@@ -9,7 +9,7 @@ permissions:
 
 env:
   AWS_REGION: eu-central-1
-  ECR_REPOSITORY: dataplatform/apache-airflow
+  ECR_REPOSITORY: dataplatform/dagcellent-docs
 
 jobs:
   deploy:
