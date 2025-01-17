@@ -8,6 +8,7 @@ MLflow Skinny is a lightweight MLflow package without SQL storage, server, UI, o
     Model registration, search, artifact loading, and deployment
     Execution of GitHub projects within notebook & against a remote target.
 """
+
 from __future__ import annotations
 
 from dagcellent.operators.mlflow._operators import (
@@ -16,10 +17,9 @@ from dagcellent.operators.mlflow._operators import (
     GetModelVersionByNameAndStage,
     SetModelVersionTag,
 )
-
 from dagcellent.operators.mlflow._utils import (
-    SlimModelVersion,
     MlflowModelStage,
+    SlimModelVersion,
 )
 
 __all__ = [

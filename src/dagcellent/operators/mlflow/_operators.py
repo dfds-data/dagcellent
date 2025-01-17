@@ -75,8 +75,8 @@ class GetModelVersionByNameAndStage(BaseOperator):
         ```python
         # Get prod model run id
         from dagcellent.operators.mlflow import (
-          GetModelVersionByNameAndStage,
-          MlflowModelStage,
+            GetModelVersionByNameAndStage,
+            MlflowModelStage,
         )
 
         get_prod_run_id = GetModelVersionByNameAndStage(
