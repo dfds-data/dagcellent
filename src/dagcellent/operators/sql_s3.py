@@ -67,17 +67,15 @@ class SqlToS3Operator(AWSSqlToS3Operator):
         aws_conn_id: reference to a specific S3 connection
         sql_conn_id: reference to a specific database.
 
-    # Example:
+    Example:
+        Output query:
 
-    Output query:
-    ```sql
-    sql_t_d_engineSource = ""
-    SELECT [EngineSourceKey]
-          ,[EngineSourceCode]
-          ,[EngineSourceName]
-      FROM [dbo].[t_D_EngineSource]
-    ""
-    ```
+        ```sql
+        SELECT [EngineSourceKey]
+              ,[EngineSourceCode]
+              ,[EngineSourceName]
+        FROM [dbo].[t_D_EngineSource];
+        ```
     """
 
     template_fields: Sequence[str] = (
