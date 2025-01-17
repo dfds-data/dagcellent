@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import logging
@@ -52,7 +51,7 @@ class SetModelVersionTag(BaseOperator):
         self.version = version
         self.tag = tag
 
-        super().__init__(**kwargs) # type: ignore [reportUnknownMemberType]
+        super().__init__(**kwargs)  # type: ignore [reportUnknownMemberType]
 
     def execute(self, context: Any) -> None:
         """Operator execute method.
@@ -95,8 +94,7 @@ class GetModelVersionByNameAndStage(BaseOperator):
         self.stage = stage
         self.model_name = model_name
 
-        super().__init__(**kwargs) # type: ignore [reportUnknownMemberType]
-
+        super().__init__(**kwargs)  # type: ignore [reportUnknownMemberType]
 
     def execute(self, context: Any) -> list[SlimModelVersion]:
         """Connect to Mlflow hook and dump messages to tmp file."""
@@ -131,7 +129,7 @@ class GetModelMetaData(BaseOperator):
         self.tracking_uri = tracking_uri
         self.upstream_task_id = upstream_task_id
 
-        super().__init__(**kwargs)# type: ignore [reportUnknownMemberType]
+        super().__init__(**kwargs)  # type: ignore [reportUnknownMemberType]
 
     def execute(self, context: Any) -> Any:
         """Operator execute method.
@@ -147,13 +145,13 @@ class GetModelMetaData(BaseOperator):
             key="return_value", task_ids=self.upstream_task_id
         )
         if isinstance(xcom_val, list):
-            _first_item = xcom_val.pop() # type: ignore [unknownTypeIssue]
-            run_id = _first_item["run_id"]# type: ignore [unknownTypeIssue]
+            _first_item = xcom_val.pop()  # type: ignore [unknownTypeIssue]
+            run_id = _first_item["run_id"]  # type: ignore [unknownTypeIssue]
             logging.warning(
                 "Multiple items returned from upstream task. Defaulting to first item"
             )
         elif isinstance(xcom_val, dict):
-            run_id = xcom_val["run_id"]# type: ignore [unknownTypeIssue]
+            run_id = xcom_val["run_id"]  # type: ignore [unknownTypeIssue]
         else:
             logging.error(
                 "Operator has no implementation for this type: %s", f"{type(xcom_val)}."
@@ -164,8 +162,7 @@ class GetModelMetaData(BaseOperator):
             raise ValueError(f"{run_id} must be an instance of 'str'")
         data = client_hook.get_run(run_id)
         logging.info("%s", f"{data=}")
-        return data.data.metrics # type: ignore [unknownTypeIssue]
-
+        return data.data.metrics  # type: ignore [unknownTypeIssue]
 
 
 class GetLatestModelVersion(BaseOperator):
@@ -192,7 +189,7 @@ class GetLatestModelVersion(BaseOperator):
         self.tracking_uri = tracking_uri
         self.model_name = model_name
 
-        super().__init__(**kwargs)# type: ignore [reportUnknownMemberType]
+        super().__init__(**kwargs)  # type: ignore [reportUnknownMemberType]
 
     def execute(self, context: Any) -> SlimModelVersion:
         """Operator execute method.

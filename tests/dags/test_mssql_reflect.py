@@ -1,6 +1,7 @@
 """Test DAG to show the usage of SQL reflection
 and executing the returned query.
 """
+
 from __future__ import annotations
 
 import datetime

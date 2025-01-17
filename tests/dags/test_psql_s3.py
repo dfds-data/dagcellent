@@ -1,4 +1,5 @@
 """Test SQL reflection on PostrgeSQL."""
+
 from __future__ import annotations
 
 import datetime

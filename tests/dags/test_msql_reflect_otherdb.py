@@ -16,7 +16,6 @@ with DAG(
     schedule="@once",
     catchup=False,
 ) as dag:
-
     reflect_table = SQLReflectOperator(
         task_id="reflect_database", conn_id=CONN_ID, table_name="kaka", database="model"
     )
