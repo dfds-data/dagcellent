@@ -1,4 +1,5 @@
 """Mlflow helpers."""
+
 # ruff: noqa: G004
 # typing: ignore
 from __future__ import annotations
@@ -7,7 +8,6 @@ from enum import Enum
 from typing import TYPE_CHECKING, TypedDict
 
 if TYPE_CHECKING:
-
     import mlflow.entities.model_registry
 
 

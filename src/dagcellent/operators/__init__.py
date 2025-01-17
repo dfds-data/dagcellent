@@ -1,4 +1,5 @@
 """Reusable operators to build Airflow DAGs."""
+
 from __future__ import annotations
 
 from dagcellent.operators.external_table_arrow import CreateExternalTableArrow
