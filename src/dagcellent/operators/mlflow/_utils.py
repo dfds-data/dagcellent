@@ -1,5 +1,6 @@
-"""Mlflow operator."""
+"""Mlflow helpers."""
 # ruff: noqa: G004
+# typing: ignore
 from __future__ import annotations
 
 from enum import Enum
@@ -11,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class SlimModelVersion(TypedDict):
-    """Slim, json serializable type of mlflow.entities.model_registry.ModelVersion."""
+    """Slim, JSON serializable type of mlflow.entities.model_registry.ModelVersion."""
 
     name: str
     version: str
@@ -19,7 +20,7 @@ class SlimModelVersion(TypedDict):
     tags: dict[str, str]
 
 
-def _serialize_model_version(
+def serialize_model_version(
     model_version: mlflow.entities.model_registry.ModelVersion,
 ) -> SlimModelVersion:
     return {
