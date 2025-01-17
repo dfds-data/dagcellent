@@ -14,10 +14,10 @@ from airflow.hooks.base import BaseHook
 from typing_extensions import ParamSpec
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-
     # NOTE ruff fails for this check
     import mlflow.entities.model_registry  # noqa: TCH004
+
+    from dagcellent.operators.mlflow._utils import MlflowModelStage
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -120,7 +120,7 @@ class MlflowHook(BaseHook):
     def get_latest_versions(
         self: MlflowHook,
         name: str,
-        stages: Sequence[str],
+        stages: list[str],
     ) -> list[mlflow.entities.model_registry.ModelVersion]:
         """Get latest model version. See MLFlow docs.
 
