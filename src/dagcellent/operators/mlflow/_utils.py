@@ -23,6 +23,10 @@ class SlimModelVersion(TypedDict):
 def serialize_model_version(
     model_version: mlflow.entities.model_registry.ModelVersion,
 ) -> SlimModelVersion:
+    """Return a subset of model metadata from mlflow ModelVersion.
+
+    Reference: [docs](https://mlflow.org/docs/latest/python_api/mlflow.entities.html#mlflow.entities.model_registry.ModelVersion).
+    """
     return {
         "name": model_version.name,
         "version": model_version.version,

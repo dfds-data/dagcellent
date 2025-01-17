@@ -69,7 +69,24 @@ class SetModelVersionTag(BaseOperator):
 
 
 class GetModelVersionByNameAndStage(BaseOperator):
-    """Wrapper around MLflow search_model_versions limited by name and tag.stage."""
+    """Wrapper around MLflow search_model_versions limited by name and tag.stage.
+
+    Example:
+        ```python
+        # Get prod model run id
+        from dagcellent.operators.mlflow import (
+          GetModelVersionByNameAndStage,
+          MlflowModelStage,
+        )
+
+        get_prod_run_id = GetModelVersionByNameAndStage(
+            task_id="get_prod_run_id",
+            tracking_uri="<login>:<password>@<domain>/<login>/mlflow",
+            model_name="<skynet-auto>",
+            stage=MlflowModelStage.PRODUCTION,
+        )
+        ```
+    """
 
     ui_color = "#78cbf7"
 
