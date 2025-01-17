@@ -1,8 +1,4 @@
 repos:
-  - repo: "https://github.com/psf/black"
-    rev: 22.10.0
-    hooks:
-    - id: black
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.9.1
     hooks:
@@ -12,6 +8,7 @@ repos:
           "--fix",
           "--exit-non-zero-on-fix"
         ]
+    - id: ruff-format
   - repo: https://github.com/crate-ci/typos
     rev: v1.16.20
     hooks:
