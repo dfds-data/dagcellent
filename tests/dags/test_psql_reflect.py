@@ -4,6 +4,7 @@ from __future__ import annotations
 import datetime
 
 from airflow import DAG
+
 from dagcellent.operators.sql_reflect import SQLReflectOperator
 
 CONN_ID = "postgres_test"

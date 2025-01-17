@@ -5,8 +5,9 @@ from __future__ import annotations
 import pathlib
 
 import pytest
-from dagcellent.dag import Config, parse_config_file
 from pydantic import ValidationError
+
+from dagcellent.dag import Config, parse_config_file
 
 
 def test_config():
