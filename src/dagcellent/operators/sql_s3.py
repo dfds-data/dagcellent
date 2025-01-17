@@ -180,7 +180,7 @@ class SqlToS3Operator(AWSSqlToS3Operator):
     @staticmethod
     def get_random_string(char_count: int = 10) -> str:
         """
-        given number of characters returns a random string with that length.
+        Given number of characters returns a random string with that length.
 
         :param char_count: number of characters
         :type char_count: int
