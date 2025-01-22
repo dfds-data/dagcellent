@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://compass.dfds.cloud/dagcellent/</loc>
+         <lastmod>2025-01-22</lastmod>
+    </url>
+    <url>
+         <loc>https://compass.dfds.cloud/dagcellent/about/</loc>
+         <lastmod>2025-01-22</lastmod>
+    </url>
+    <url>
+         <loc>https://compass.dfds.cloud/dagcellent/reference/</loc>
+         <lastmod>2025-01-22</lastmod>
+    </url>
+    <url>
+         <loc>https://compass.dfds.cloud/dagcellent/reference/dag/</loc>
+         <lastmod>2025-01-22</lastmod>
+    </url>
+    <url>
+         <loc>https://compass.dfds.cloud/dagcellent/reference/data_utils/</loc>
+         <lastmod>2025-01-22</lastmod>
+    </url>
+    <url>
+         <loc>https://compass.dfds.cloud/dagcellent/reference/operators/</loc>
+         <lastmod>2025-01-22</lastmod>
+    </url>
+    <url>
+         <loc>https://compass.dfds.cloud/dagcellent/reference/operators.mlflow/</loc>
+         <lastmod>2025-01-22</lastmod>
+    </url>
+</urlset>
