@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import functools
 import logging
-from collections.abc import Callable
 from typing import TYPE_CHECKING, TypeVar
 from warnings import warn
 
@@ -15,6 +14,8 @@ from typing_extensions import ParamSpec
 
 if TYPE_CHECKING:
     # NOTE ruff fails for this check
+    from collections.abc import Callable
+
     import mlflow.entities.model_registry  # noqa: TCH004
 
     from dagcellent.operators.mlflow._utils import MlflowModelStage
@@ -31,8 +32,9 @@ def _mlflow_request_wrapper(query: Callable[P, T]) -> T:
     try:
         res = query()
     except mlflow.MlflowException as exc:
-        _LOGGER.error("Error during mlflow query.", exc_info=exc)
-        raise mlflow.MlflowException from exc
+        _msg = "Error during mlflow query."
+        _LOGGER.error(_msg, exc_info=exc)
+        raise mlflow.MlflowException(_msg) from exc
     return res
 
 

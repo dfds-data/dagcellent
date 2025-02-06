@@ -188,6 +188,9 @@ venvPath = ".venv"
 venv = "dev"
 
 [tool.ruff]
+exclude = [
+  "typings/*"
+]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
@@ -304,7 +307,8 @@ disable_error_code = [
     "annotation-unchecked",
 ]
 exclude = [
-    "examles/*",
+    "^examples/*",
+    "^typings/*"
 ]
 
 [tool.versioningit]

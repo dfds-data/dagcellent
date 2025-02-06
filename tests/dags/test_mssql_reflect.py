@@ -30,7 +30,7 @@ with DAG(
     create_pet_table = SQLExecuteQueryOperator(
         task_id="create_pet_table",
         conn_id=CONN_ID,
-        sql=reflect_table.output,
+        sql=reflect_table.output,  # type: ignore
     )
 
     reflect_table >> create_pet_table

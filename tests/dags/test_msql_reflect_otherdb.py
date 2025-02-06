@@ -23,7 +23,7 @@ with DAG(
     execute = SQLExecuteQueryOperator(
         task_id="execute_query",
         conn_id=CONN_ID,
-        sql=reflect_table.output,
+        sql=reflect_table.output,  # type: ignore
         database="model",
     )
 
