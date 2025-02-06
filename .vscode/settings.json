@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/dev/bin/python",
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/dev/bin/python3",
     "python.terminal.activateEnvironment": false,
     "[python]": {
         "editor.formatOnSave": true,
