@@ -15,13 +15,15 @@ repos:
     - id: typos
       stages: [commit]
       exclude: "^typings/.*"
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.10.1  # Use the sha / tag you want to point at
+  - repo: local
     hooks:
-    -   id: mypy
-        language: system
-        pass_filenames: false
-        args: ['.']
+    - id: mypy-hatch
+      name: mypy-hatch
+      language: system
+      pass_filenames: false
+      args: ['.']
+      entry: hatch
+      args: ["run", "types:check"]
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.3.0
     hooks:

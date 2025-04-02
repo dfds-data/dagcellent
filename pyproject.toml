@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling", "versioningit"]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
 name = "dagcellent"
-dynamic = ["version"]
+version = "0.2.0"
 description = ''
 readme = "README.md"
 requires-python = ">=3.11"
@@ -28,7 +28,7 @@ classifiers = [
 dependencies = [
     "apache-airflow>=2.9.1",
     "apache-airflow-providers-amazon>=7.2.0",
-    "apache-airflow-providers-microsoft-mssql >=3.2.0",
+    "apache-airflow-providers-microsoft-mssql >=4.0.0",
     "apache-airflow-providers-snowflake >= 5.1",
     "apache-airflow-providers-common-sql[pandas,openlineage]",
     "tomli >= 2.0.1",
@@ -64,18 +64,17 @@ extra-dependencies = [
     "pre-commit == 3.7.*",
     "ruff == 0.4.4",
     "mypy == 1.10.*",
-    "versioningit == 3.1.*",
     "towncrier == 23.11.*",
 ]
 
 [tool.hatch.envs.dev.scripts]
 install = "pre-commit install --hook-type commit-msg"
-version = "versioningit"
 changelog = "git-cliff -o CHANGELOG.md"
 
 [tool.hatch.envs.types]
 extra-dependencies = [
   "mypy>=1.0.0",
+  "types-requests",
 ]
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/dagcellent tests}"
@@ -96,16 +95,15 @@ extra-dependencies = [
     "pytest >= 8.0.0",
     "pytest-cov",
     "pytest-mock >= 3.14.0",
+    "pytest-docker",
 ]
 
 [[tool.hatch.envs.test.matrix]]
 python = ["3.11", "3.12"]
 
 [tool.hatch.envs.test.scripts]
-test = "pytest --cov=dagcellent --cov-report=term-missing --cov-report=xml --cov-report=html tests"
+test = "pytest --cov=dagcellent --cov-report=term-missing --cov-report=xml --cov-report=html --container-scope module tests"
 
-[tool.hatch.version]
-source = "versioningit"
 
 [tool.coverage.run]
 source_pkgs = ["dagcellent", "tests"]
@@ -311,24 +309,4 @@ exclude = [
     "^typings/*"
 ]
 
-[tool.versioningit]
-default-version = "0.0.0-unknown"
-
-[tool.versioningit.vcs]
-# The method key:
-method = "git"  # <- The method name
-
-# Parameters to pass to the method:
-match = ["v*"]
-default-tag = "0.0.1"
-
-[tool.hatch.build.hooks.versioningit-onbuild]
-source-file = "src/dagcellent/__init__.py"
-build-file = "dagcellent/__init__.py"
-require-match = true
-
-[tool.versioningit.format]
-distance = "{next_version}.dev{distance}+{vcs}{rev}"
-dirty = "{version}+dirty"
-distance-dirty = "{next_version}.dev{distance}+{vcs}{rev}.dirty"
 

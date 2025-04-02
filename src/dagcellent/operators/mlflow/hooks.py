@@ -30,7 +30,7 @@ T = TypeVar("T")
 def _mlflow_request_wrapper(query: Callable[P, T]) -> T:
     """Wrap requests around MlflowException."""
     try:
-        res = query()
+        res = query()  # type: ignore[call-arg]
     except mlflow.MlflowException as exc:
         _msg = "Error during mlflow query."
         _LOGGER.error(_msg, exc_info=exc)
@@ -63,11 +63,17 @@ class MlflowHook(BaseHook):
 
         Returns:
             dict: hashmap with version and run_id of latest model
+
+        Raises:
+            ValueError: No model returned with given name.
         """
         query = functools.partial(
             self.client.search_model_versions, f"name = '{model_name}'"
         )
         model_reigstry_info = _mlflow_request_wrapper(query)
+        if len(model_reigstry_info) == 0:
+            _msg = f"No models found with name {model_name}."
+            raise ValueError(_msg)
         latest_version = functools.reduce(
             lambda x, y: x if int(x.version) > int(y.version) else y,
             model_reigstry_info,
@@ -110,6 +116,11 @@ class MlflowHook(BaseHook):
         Returns:
             mlflow.entities.model_registry.ModelVersion: model version
         """
+        warn(
+            "This function is deprecated in mlflow 2.9.0",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         query = functools.partial(
             self.client.transition_model_version_stage,
             name,
@@ -135,7 +146,11 @@ class MlflowHook(BaseHook):
         Returns:
             list[mlflow.entities.model_registry.ModelVersion]: list of model versions
         """
-        warn("This is deprecated in mlflow 2.9.0", DeprecationWarning, stacklevel=2)
+        warn(
+            "This function is deprecated in mlflow 2.9.0",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         query = functools.partial(self.client.get_latest_versions, name, stages)
         return _mlflow_request_wrapper(query)
 

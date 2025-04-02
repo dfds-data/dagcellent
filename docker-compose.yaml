@@ -9,12 +9,11 @@ version: '3.8'
 services:
   airflow:
     build: .
+    #image: pytest74406-airflow:latest
     ports:
       - "8080:8080"
     container_name: airflow
     restart: always
-    depends_on:
-      - db
     volumes:
       - ./tests/dags:/opt/airflow/dags
       - ./:/opt/dagcellent/
