@@ -28,7 +28,7 @@ jobs:
 
   test:
     name: "tests & coverage 💊"
-    needs: precommit
+    # needs: precommit
     runs-on: ubuntu-latest
     strategy:
       matrix:
