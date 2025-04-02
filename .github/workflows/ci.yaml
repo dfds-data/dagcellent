@@ -25,6 +25,8 @@ jobs:
     - name: Install Hatch
       run: pipx install hatch
     - uses: pre-commit/action@v3.0.1
+      with:
+        extra_args: --color=always
 
   test:
     name: "tests & coverage 💊"
