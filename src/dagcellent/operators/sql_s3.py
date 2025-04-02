@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import random
 import string
-from collections.abc import Iterable, Sequence
 from typing import TYPE_CHECKING, Any, NamedTuple, TypedDict
 
 from airflow.models.connection import Connection
@@ -16,6 +15,8 @@ from airflow.providers.amazon.aws.transfers.sql_to_s3 import (
 from dagcellent._connection import ConnectionType
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
+
     import pandas as pd
     from airflow.utils.context import Context
     from sqlalchemy.engine import Engine
