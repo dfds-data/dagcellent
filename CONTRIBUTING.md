@@ -10,8 +10,12 @@ Install hatch with `pipx` and configure it. As a minimum, configure it to create
 [dirs.env]
 virtual = ".venv"
 ```
+# Cheat sheet
+- tests: `hatch run test:test`
+- docs: `hatch run dev:docs`
 
-# VSCode
+# Dev tooling
+## VSCode
 1. Clone the repo
 1. Run `hatch env create && hatch env create dev && hatch env create test`
 1. Open VSCode `code .`
@@ -19,12 +23,9 @@ virtual = ".venv"
 
 To enable test discovery and test debugging, change the *python interpreter path* to a test environments path e.g. `test.py3.11`.
 
-# No VSCode
+## No VSCode
 I suggest NeoVim or Zed. See the cheat-sheet below.
 
-# Cheat sheet
-- tests: `hatch test`
-- docs: `hatch run dev:docs`
 
 # Documentation
 The docs is built into "sites" folder. This is gitignored and the docs is built in CI.
@@ -54,19 +55,28 @@ The package follows semantic versioning. Breaking changes will occur unannounced
 
 
 # Docker
-The base Dockerfile can be used to run Airflow and install dagcellent in _editable_ mode, so it gives you a short feedback loop.
+It is recommended to use Podman with the container files. The base Dockerfile can be used to run Airflow and install dagcellent in _editable_ mode, so it gives you a short feedback loop.
 
-# tests
+# Tests
+The testing suite uses Pytest.
+
 ## Unit tests
 ### Fuzzing/hypothesis
+*coming soon* 👀
 
 ## Integration tests
-The CI will run integration tests, where external components are not mocked, but real containerized entities are used.
+The CI will run integration tests, where external components are not mocked, but real containerized entities are used. All integration tests are marked with `integration`.
+
+In general, prefer integration testing/system tests over mocking. E.g.: to guarantee that our tools work on various SQL engines, implement integration tests against those engines.
+
+The following structure illustrates where to find the various integration test.
+```
+tests
+├── dags
+└── integration
+    ├── mlflow
+    ├── mssql
+    └── psql
+```
 
 
-The following integrations are available (docker commands should be executed from the project root folder):
-- mssql: `docker compose -f docker-compose.yaml -f ./tests/integration/docker-compose.override.mssql.yaml up --detach`
-- psql: `docker compose -f docker-compose.yaml -f ./tests/integration/docker-compose.override.psql.yaml up --detach`
-
-To stop the running instances, it is a good idea to use the `volumes` flag to remove persistent data:
-`docker compose -f docker-compose.yaml -f ./tests/integration/docker-compose.override.mssql.yaml down`
