@@ -151,7 +151,7 @@ def safe_add_database_to_connection(engine: Engine, database: str) -> Engine:
 def reflect_meta_data(engine: Engine, schema: str | None, table: str) -> Table | None:
     """Reflects the metadata from the engine."""
     meta_data = MetaData(schema=schema)
-    return Table(table, meta_data, autoload_with=engine)
+    return Table(table, meta_data, autoload_with=engine, schema=schema)
 
 
 def _log_reflected_table(meta_data: MetaData, table_name: str) -> None:
