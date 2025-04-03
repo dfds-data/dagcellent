@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import TYPE_CHECKING
-from warnings import warn
 
 import pymssql
 import pytest
@@ -50,5 +49,4 @@ def db_engine(mssql_service: None) -> Engine:
     The service is reachable and a "dbo.test" table is populated with dummy
     data. See `./tests/integration/mssql/mssql_init.sql`
     """
-    yield create_engine(TEST_CONNECTION_URL)
-    warn("Cleanup", stacklevel=2)
+    return create_engine(TEST_CONNECTION_URL)

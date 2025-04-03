@@ -7,6 +7,7 @@ import mlflow
 import pytest
 import requests
 
+pytestmark = [pytest.mark.integration, pytest.mark.mlflow]
 if TYPE_CHECKING:
     from dagcellent.operators.mlflow.hooks import MlflowHook
 

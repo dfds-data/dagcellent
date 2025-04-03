@@ -106,6 +106,12 @@ python = ["3.11", "3.12"]
 [tool.hatch.envs.test.scripts]
 test = "pytest --cov=dagcellent --cov-report=term-missing --cov-report=xml --cov-report=html --container-scope module tests"
 
+[tool.pytest.ini_options]
+markers = [
+  "integration: Run tests against containers.",
+  "mlflow: Run MLFlow tests."
+]
+
 
 [tool.coverage.run]
 source_pkgs = ["dagcellent", "tests"]
