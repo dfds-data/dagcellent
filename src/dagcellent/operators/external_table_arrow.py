@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from airflow.models.baseoperator import BaseOperator
 
@@ -9,6 +8,9 @@ from dagcellent.data_utils.sql_reflection import (
     Query,
     create_external_table_redshift_arrow,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 
 class CreateExternalTableArrow(BaseOperator):

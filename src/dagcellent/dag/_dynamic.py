@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Callable, Iterable
-from pathlib import Path
-from typing import TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 import tomli
 from pydantic import BaseModel, ConfigDict
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
+    from pathlib import Path
 
 T = TypeVar("T", bound="Config")
 

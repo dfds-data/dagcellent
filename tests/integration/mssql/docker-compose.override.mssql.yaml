@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     container_name: sql-server
@@ -24,7 +22,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     volumes:
       - type: bind
-        source: ./tests/integration/init/mssql_init.sql
+        source: ./tests/integration/mssql/mssql_init.sql
         target: /docker-entrypoint-initdb.d/mssql_init.sql
     depends_on:
       db:

@@ -12,12 +12,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
     - uses: actions/setup-python@v3
+    - name: Set up pip cache
+      if: runner.os == 'Linux'
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
+        restore-keys: ${{ runner.os }}-pip-
+    - name: Install Hatch
+      run: pipx install hatch
     - uses: pre-commit/action@v3.0.1
+      with:
+        extra_args: --color=always
 
   test:
     name: "tests & coverage 💊"
-    needs: precommit
+    # needs: precommit
     runs-on: ubuntu-latest
     strategy:
       matrix:
