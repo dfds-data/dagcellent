@@ -6,7 +6,7 @@ from typing import Literal
 
 from pydantic import Field
 
-from ingestion.models.base import BaseEntityConfig, BaseSourceConfig
+from ingestion.base import BaseEntityConfig, BaseSourceConfig
 
 
 class SqlEntityConfig(BaseEntityConfig):

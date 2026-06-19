@@ -28,7 +28,7 @@ class BaseEntityConfig(BaseModel):
     write_disposition: Literal["append", "replace"]
     partition_column: str | None = None
     incremental_column: str | None = None
-    schema_contract: dict[str, str] = Field(default_factory=lambda: {"data_type": "freeze"})
+    schema_contract: dict[str, str] = Field(default_factory=lambda: {"data_type": "evolve", "columns": "evolve"})
     k8s_resources: K8sResources = Field(
         default_factory=lambda: K8sResources(
             requests=K8sResourceSpec(cpu="400m", memory="1Gi"),

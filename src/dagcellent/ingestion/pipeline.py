@@ -6,10 +6,11 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 
-from ingestion.models.sql_database import SqlDatabaseSourceConfig
+from ingestion.sql_database import SqlDatabaseSourceConfig
 
+# Add new source config types to this union, nowhere else needs to change.
 SourceConfig = Annotated[
-    SqlDatabaseSourceConfig,
+    SqlDatabaseSourceConfig, # | RestApiSourceConfig | ...
     Field(discriminator="type"),
 ]
 
