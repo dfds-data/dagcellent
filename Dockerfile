@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 apache/airflow:slim-2.9.1-python3.12 AS base
+FROM --platform=linux/amd64 apache/airflow:slim-2.11.1-python3.12 AS base
 
 USER root
 ARG AIRFLOW_USER_HOME=/opt/airflow
@@ -10,10 +10,10 @@ ENV AIRFLOW__CORE__LOAD_EXAMPLES='true'
 FROM base AS deps
 USER airflow
 
-RUN pip install apache-airflow-providers-postgres apache-airflow-providers-microsoft-mssql apache-airflow-providers-amazon --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.9.1/constraints-3.12.txt"
-COPY ./ /opt/dagcellent/
+RUN pip install apache-airflow-providers-postgres apache-airflow-providers-microsoft-mssql apache-airflow-providers-amazon --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.11.1/constraints-3.12.txt"
+COPY . /opt/dagcellent/
 WORKDIR /opt/dagcellent
-RUN pip install -e . 
+RUN pip install -e .
 
 
 FROM deps
@@ -25,4 +25,3 @@ VOLUME /opt/dagcellent/
 
 ENTRYPOINT [ "airflow" ]
 CMD ["standalone"]
-

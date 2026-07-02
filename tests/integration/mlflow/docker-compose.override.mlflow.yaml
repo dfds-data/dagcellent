@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   #  minio:
@@ -15,16 +15,16 @@ services:
   mlflow:
     image: ghcr.io/mlflow/mlflow:v2.20.3
     #    build:
-     # context: ..
-      # dockerfile: ghcr.io/mlflow/mlflow:v2.20.3
-      #      args:
-      #  - MLFLOW_VERSION=">=2.2"
+    # context: ..
+    # dockerfile: ghcr.io/mlflow/mlflow:v2.20.3
+    #      args:
+    #  - MLFLOW_VERSION=">=2.2"
     container_name: mlflow
     restart: on-failure
     ports:
-      - "5005:5000"
+      - 5005:5000
     #depends_on:
-      #  - postgres
+    #  - postgres
     environment:
       - GUNICORN_CMD_ARGS="--bind=0.0.0.0"
     #  - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
@@ -36,4 +36,3 @@ services:
 #  postgres-db-volume:
 #  logs:
 #  minio_data:
-
