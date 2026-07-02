@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import random
 import string
+from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING, Any, NamedTuple, TypedDict
 
 from airflow.models.connection import Connection
 from airflow.providers.amazon.aws.transfers.sql_to_s3 import (
     FILE_FORMAT,
-    NamedTemporaryFile,
     S3Hook,
     SqlToS3Operator as AWSSqlToS3Operator,
 )
