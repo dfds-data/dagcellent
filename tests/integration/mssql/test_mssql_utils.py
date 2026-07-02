@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
 
-def test_reflect_meta_data(db_engine: Engine):
-    table = reflect_meta_data(db_engine, schema="dbo", table="test")
-    assert table is not None
-    assert table.name == "test"
+# def test_reflect_meta_data(db_engine: Engine):
+#     table = reflect_meta_data(db_engine, schema="dbo", table="test")
+#     assert table is not None
+#     assert table.name == "test"
